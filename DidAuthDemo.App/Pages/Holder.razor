@@ -1,0 +1,138 @@
+﻿@page "/holder/{holderDid}"
+
+@using CardanoSharp.Wallet.Extensions;
+@using CardanoSharp.Wallet.Models.Keys;
+@using CardanoSharp.Wallet.Utilities;
+@using DidAuthDemo.App.Common;
+@using DidAuthDemo.App.Data;
+@using DidAuthDemo.App.Models;
+@using DidAuthDemo.App.ViewModels;
+@using Radzen.Blazor
+@using Radzen;
+@using SimpleBase;
+@using System.Text.Json
+
+@inject HolderViewModel ViewModel
+@inject DialogService DialogService
+
+<PageTitle>Holder Dashboard</PageTitle>
+
+<RadzenRow>
+    <RadzenColumn class="rz-background-color-info-lighter rz-color-on-info-lighter rz-text-align-center rz-p-2">
+        <RadzenText TextStyle="TextStyle.H2">Holder</RadzenText>
+        <RadzenText TextStyle="TextStyle.H4">@HolderDid</RadzenText>
+        <RadzenText TextStyle="TextStyle.H6">Private Key: @ViewModel.HolderDidDocument?.KeyPair.PrivateKey.Key.ToStringHex()</RadzenText>
+        <RadzenText TextStyle="TextStyle.H6">Public Key: @ViewModel.HolderDidDocument?.KeyPair.PublicKey.Key.ToStringHex()</RadzenText>
+    </RadzenColumn>
+</RadzenRow>
+<RadzenRow Class="rz-my-3 rz-mx-auto">
+    <RadzenColumn Size="6">
+        <RadzenText TextStyle="TextStyle.H4">Auth DIDs</RadzenText>
+        <!-- List of Auth DIDs-->
+        @foreach (var authDidDoc in ViewModel.AuthDidDocuments)
+        {
+            <RadzenCard Class="rz-my-3 rz-mx-auto rz-background-color-warning-lighter rz-color-on-info-lighter">
+                <RadzenStack JustifyContent="JustifyContent.End" Gap="0">
+                    <RadzenText TextStyle="TextStyle.H6">DID: @authDidDoc.Id</RadzenText>
+                    <RadzenText>Private Key: @authDidDoc?.KeyPair.PrivateKey.Key.ToStringHex()</RadzenText>
+                    <RadzenText>Public Key: @authDidDoc?.KeyPair.PublicKey.Key.ToStringHex()</RadzenText>
+                    <RadzenButton Click=@(args => ViewAuthDidDocument(authDidDoc))>View</RadzenButton>
+                </RadzenStack>
+            </RadzenCard>
+        }
+        <RadzenButton Click=@(args => ViewModel.GenerateNewAuthDidDocument())>Create</RadzenButton>
+    </RadzenColumn>
+    @*<RadzenColumn Size="6">
+        <RadzenText TextStyle="TextStyle.H4">Profile DIDs</RadzenText>
+        <!-- List of Auth DIDs-->
+        @foreach (var profDidDocuments in ProfileDidDocuments)
+        {
+            <RadzenCard Class="rz-my-3 rz-mx-auto rz-background-color-warning-lighter rz-color-on-info-lighter">
+                <RadzenStack JustifyContent="JustifyContent.End" Gap="0">
+                    <RadzenText TextStyle="TextStyle.H6">DID: @profDidDocuments.Id</RadzenText>
+                    <RadzenText>Private Key: @profDidDocuments?.KeyPair.PrivateKey.Key.ToStringHex()</RadzenText>
+                    <RadzenText>Public Key: @profDidDocuments?.KeyPair.PublicKey.Key.ToStringHex()</RadzenText>
+                </RadzenStack>
+            </RadzenCard>
+        }
+        <RadzenButton Click=@(args => GenerateNewProfileDidDocument())>Create</RadzenButton>
+    </RadzenColumn>*@
+
+    <RadzenColumn Size="6">
+        <RadzenText TextStyle="TextStyle.H4">Responses</RadzenText>
+        <!-- List of Auth DIDs-->
+        @foreach (var authResponse in ViewModel.AuthResponses)
+        {
+            <RadzenCard Class="rz-my-3 rz-mx-auto rz-background-color-warning-lighter rz-color-on-info-lighter">
+                <RadzenStack JustifyContent="JustifyContent.End" Gap="0">
+                    <RadzenText TextStyle="TextStyle.H6">Challenge: @authResponse.Proof.Challenge</RadzenText>
+                    <RadzenText>Public Key DID: @authResponse.Proof.VerificationMethod</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body2" class="rz-mb-3">Signature: @authResponse.Proof.ProofValue</RadzenText>
+                    <RadzenButton Class="rz-mb-3" Click=@(args => ViewResponse(authResponse))>View</RadzenButton>
+                    <RadzenButton Click=@(args => ViewModel.CopyResponse(authResponse))>Copy</RadzenButton>
+                </RadzenStack>
+            </RadzenCard>
+        }
+        <div>
+            <RadzenTextBox Placeholder="Request" @bind-Value=@ViewModel.RequestToSign Style="width: 100%" />
+        </div>
+        <div>
+            <RadzenDropDown TValue="string" @bind-Value=@ViewModel.SelectedAuthDidForResponse Data=@ViewModel.AuthDids Class="rz-my-3" Style="width: 100%" />
+        </div>
+        <RadzenButton Click=@(args => ViewModel.SignAuthRequest())>Create</RadzenButton>
+    </RadzenColumn>
+</RadzenRow>
+
+
+
+@code {
+    [Parameter]
+    public string? HolderDid { get; set; }    
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(HolderDid))
+            ViewModel.GetHolderDidDocument(HolderDid);
+
+        if (!string.IsNullOrEmpty(HolderDid))
+            ViewModel.GetDidAuthDocuments(HolderDid);
+
+        if (!string.IsNullOrEmpty(HolderDid))
+            ViewModel.GetDidProfileDocuments(HolderDid);
+
+        if (!string.IsNullOrEmpty(HolderDid))
+            ViewModel.GetAuthResponses(HolderDid);
+    }
+
+    async Task ViewResponse(AuthResponse obj)
+    {
+        var result = await DialogService.OpenAsync("View Auth Response", ds =>
+            @<RadzenStack Gap="1.5rem">
+                <p>
+                    <pre>@(JsonSerializer.Serialize(obj, new JsonSerializerOptions() { WriteIndented = true }))</pre>
+                </p>
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                        <RadzenButton Text="Ok" Click="() => ds.Close(true)" Style="width: 80px;" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenStack>
+        );
+    }
+
+    async Task ViewAuthDidDocument(DidDocument obj)
+    {
+        var result = await DialogService.OpenAsync("View Auth DID", ds =>
+            @<RadzenStack Gap="1.5rem">
+                <p>
+                    <pre>@(JsonSerializer.Serialize(obj, new JsonSerializerOptions() { WriteIndented = true }))</pre>
+                </p>
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                        <RadzenButton Text="Ok" Click="() => ds.Close(true)" Style="width: 80px;" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenStack>
+        );
+    }
+}

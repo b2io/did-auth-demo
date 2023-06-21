@@ -1,0 +1,39 @@
+﻿@page "/holders"
+
+@using System.Linq.Dynamic.Core
+@using DidAuthDemo.App.Data;
+@using DidAuthDemo.App.Models;
+
+@inject NavigationManager Navigation
+@inject DidService DidService
+
+<PageTitle>Holders</PageTitle>
+
+<RadzenStack>
+    <RadzenText TextStyle="TextStyle.H2">Holders</RadzenText>
+    <RadzenStack Orientation="Orientation.Horizontal">
+        @foreach(var d in data)
+        {
+            <RadzenCard class="p-3 rz-text-align-center">
+                <RadzenText>@d.Id</RadzenText>
+                <RadzenButton Click="(args => GoTo(d))">View</RadzenButton>
+            </RadzenCard>
+        }
+    </RadzenStack>
+</RadzenStack>
+
+@code {
+    public IEnumerable<DidDocument> data { get; set; } = new List<DidDocument>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        data = DidService.GetHolderList();
+    }
+
+    void GoTo(DidDocument didDocument)
+    {
+        Navigation.NavigateTo($"/holder/{didDocument.Id}");
+    }
+}

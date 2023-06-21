@@ -1,0 +1,154 @@
+﻿@page "/verifier/{verifierDid}"
+
+@using CardanoSharp.Wallet.Extensions;
+@using CardanoSharp.Wallet.Extensions.Models;
+@using CardanoSharp.Wallet.Models.Keys;
+@using CardanoSharp.Wallet.Utilities;
+@using DidAuthDemo.App.Common;
+@using DidAuthDemo.App.Data;
+@using DidAuthDemo.App.ViewModels;
+@using Radzen.Blazor
+@using Radzen;
+@using SimpleBase;
+@using System.Text.Json;
+@using System.Text;
+@using DidAuthDemo.App.Models;
+
+@inject VerifierViewModel ViewModel
+@inject DialogService DialogService
+
+<PageTitle>Verifier Dashboard</PageTitle>
+
+<RadzenRow>
+    <RadzenColumn class="rz-background-color-info-lighter rz-color-on-info-lighter rz-text-align-center rz-p-2">
+        <RadzenText TextStyle="TextStyle.H2">Verifier</RadzenText>
+        <RadzenText TextStyle="TextStyle.H4">@VerifierDid</RadzenText>
+        <RadzenText TextStyle="TextStyle.H6">Private Key: @ViewModel.VerifierDidDocument?.KeyPair.PrivateKey.Key.ToStringHex()</RadzenText>
+        <RadzenText TextStyle="TextStyle.H6">Public Key: @ViewModel.VerifierDidDocument?.KeyPair.PublicKey.Key.ToStringHex()</RadzenText>
+    </RadzenColumn>
+</RadzenRow>
+<RadzenRow Class="rz-my-3 rz-mx-auto">
+    <RadzenColumn Size="6">
+        <RadzenText TextStyle="TextStyle.H4">Auth DIDs</RadzenText>
+        <!-- List of Auth DIDs-->
+        @foreach (var authDidDoc in ViewModel.AuthDidDocuments)
+        {
+            <RadzenCard Class="rz-my-3 rz-mx-auto rz-background-color-warning-lighter rz-color-on-info-lighter">
+                <RadzenStack JustifyContent="JustifyContent.End" Gap="0">
+                    <RadzenText TextStyle="TextStyle.H6">DID: @authDidDoc.Id</RadzenText>
+                    <RadzenText>Private Key: @authDidDoc?.KeyPair.PrivateKey.Key.ToStringHex()</RadzenText>
+                    <RadzenText>Public Key: @authDidDoc?.KeyPair.PublicKey.Key.ToStringHex()</RadzenText>
+                    <RadzenButton Click=@(args => ViewAuthDidDocument(authDidDoc))>View</RadzenButton>
+                </RadzenStack>
+            </RadzenCard>
+        }
+        <RadzenButton Click=@(args => ViewModel.GenerateNewAuthDidDocument())>Create</RadzenButton>
+    </RadzenColumn>
+    @*<RadzenColumn Size="6">
+    <RadzenText TextStyle="TextStyle.H4">Profile DIDs</RadzenText>
+    <!-- List of Auth DIDs-->
+    @foreach (var profDidDocuments in ProfileDidDocuments)
+    {
+    <RadzenCard Class="rz-my-3 rz-mx-auto rz-background-color-warning-lighter rz-color-on-info-lighter">
+    <RadzenStack JustifyContent="JustifyContent.End" Gap="0">
+    <RadzenText TextStyle="TextStyle.H6">DID: @profDidDocuments.Id</RadzenText>
+    <RadzenText>Private Key: @profDidDocuments?.KeyPair.PrivateKey.Key.ToStringHex()</RadzenText>
+    <RadzenText>Public Key: @profDidDocuments?.KeyPair.PublicKey.Key.ToStringHex()</RadzenText>
+    </RadzenStack>
+    </RadzenCard>
+    }
+    <RadzenButton Click=@(args => GenerateNewProfileDidDocument())>Create</RadzenButton>
+    </RadzenColumn>*@
+    <RadzenColumn Size="6">
+        <RadzenText TextStyle="TextStyle.H4">Requests</RadzenText>
+        <!-- List of Auth DIDs-->
+        @foreach (var authRequest in ViewModel.AuthRequests)
+        {
+            <RadzenCard Class="rz-my-3 rz-mx-auto rz-background-color-warning-lighter rz-color-on-info-lighter">
+                <RadzenStack JustifyContent="JustifyContent.End" Gap="0">
+                    <RadzenText TextStyle="TextStyle.H6">Challenge: @authRequest.Challenge</RadzenText>
+                    <RadzenText>Public Key DID: @authRequest.Proof.VerificationMethod</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body2" class="rz-mb-3">Signature: @authRequest.Proof.ProofValue</RadzenText>
+                    <RadzenButton class="rz-mb-3" Click=@(args => ViewModel.CopyRequest(authRequest))>Copy</RadzenButton>
+                    <RadzenButton Click=@(args => ViewRequest(authRequest))>View</RadzenButton>
+                    <div class="rz-my-3">
+                        <RadzenTextBox Placeholder="Response" @bind-Value=@ViewModel.ResponseToVerify Style="width: 100%" />
+                    </div>
+                    <RadzenButton Click=@(args => VerifyResponse(authRequest))>Verify</RadzenButton>
+                </RadzenStack>
+            </RadzenCard>
+        }
+        <div>
+            <RadzenDropDown TValue="string" @bind-Value=@ViewModel.SelectedAuthDidForRequest Data=@ViewModel.AuthDids Class="rz-my-3" Style="width: 100%" />
+        </div>
+        <RadzenButton Click=@(args => ViewModel.GenerateNewAuthRequest())>Create</RadzenButton>
+    </RadzenColumn>
+</RadzenRow>
+
+
+
+@code {
+    [Parameter]
+    public string? VerifierDid { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(VerifierDid))
+            ViewModel.GetVerifierDidDocument(VerifierDid);
+
+        if (!string.IsNullOrEmpty(VerifierDid))
+            ViewModel.GetDidAuthDocuments(VerifierDid);
+
+        if (!string.IsNullOrEmpty(VerifierDid))
+            ViewModel.GetDidProfileDocuments(VerifierDid);
+
+        if (!string.IsNullOrEmpty(VerifierDid))
+            ViewModel.GetAuthRequests(VerifierDid);
+    }
+
+    async Task ViewRequest(AuthRequestWithSignature request)
+    {
+        var result = await DialogService.OpenAsync("View Auth Request", ds =>
+    @<RadzenStack Gap="1.5rem">
+        <p>
+            <pre>@(JsonSerializer.Serialize(request, new JsonSerializerOptions() { WriteIndented = true }))</pre>
+        </p>
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenButton Text="Ok" Click="() => ds.Close(true)" Style="width: 80px;" />
+            </RadzenStack>
+        </RadzenStack>
+    </RadzenStack>
+    );
+    }
+
+    async Task ViewAuthDidDocument(DidDocument obj)
+    {
+        var result = await DialogService.OpenAsync("View Auth DID", ds =>
+    @<RadzenStack Gap="1.5rem">
+        <p>
+            <pre>@(JsonSerializer.Serialize(obj, new JsonSerializerOptions() { WriteIndented = true }))</pre>
+        </p>
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenButton Text="Ok" Click="() => ds.Close(true)" Style="width: 80px;" />
+            </RadzenStack>
+        </RadzenStack>
+    </RadzenStack>
+        );
+    }
+
+    async Task VerifyResponse(AuthRequest request)
+    {
+        var result = ViewModel.GetHoldersAuthDidDocument(request);
+
+        if (result.Item1 is null)
+        {
+            await DialogService.Alert($"Unable to find DID Verification Method", "DID Verification Method", new AlertOptions() { OkButtonText = "Ok" });
+            return;
+        }
+
+        var isValidWords = result.Item2 ? "valid" : "invalid";
+        await DialogService.Alert($"The response is {isValidWords}", "Response Verification", new AlertOptions() { OkButtonText = "Ok" });
+    }
+}

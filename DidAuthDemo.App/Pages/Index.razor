@@ -1,0 +1,70 @@
+﻿@page "/"
+@using CardanoSharp.Wallet.Extensions;
+@using CardanoSharp.Wallet.Models.Keys;
+@using CardanoSharp.Wallet.Utilities;
+@using DidAuthDemo.App.Data;
+@using DidAuthDemo.App.ViewModels;
+@using Radzen.Blazor
+@using Radzen;
+@using SimpleBase;
+@using DidAuthDemo.App.Models;
+
+@inject HomePageViewModel ViewModel
+
+<PageTitle>Index</PageTitle>
+
+<div class="rz-p-12">
+<RadzenText 
+    TextStyle="TextStyle.H1"
+    TextAlign="TextAlign.Center">Choose Your Actor</RadzenText>
+
+    <RadzenRow Gap="1rem">
+        <RadzenColumn class="rz-p-5">
+            <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width: 420px">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
+                    <RadzenStack Gap="0">
+                        <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">Role</RadzenText>
+                        <RadzenText TextStyle="TextStyle.H4"><b>Holder</b></RadzenText>
+                    </RadzenStack>
+                </RadzenStack>
+                <RadzenCard class="rz-background-color-primary-light rz-shadow-0 rz-border-radius-0 rz-p-8" style="margin: 1rem calc(-1 * var(--rz-card-padding));">
+                    <RadzenText TextStyle="TextStyle.H6" TextAlign="TextAlign.Left" class="rz-color-on-primary-light"><strong>Description</strong></RadzenText>
+                    <RadzenRow RowGap="0">
+                        <RadzenColumn>
+                            <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">The Holder plays the part of a user. This role will create a DID and two DID Documents: Auth and Profile. The Holder will receive an Auth Request and produce a Auth Response for the Verifier. The Holder will validate the Verifier's Identity.</RadzenText>
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenCard>
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
+                    <RadzenButton Variant="Variant.Text" Text="Select & Generate DID" Click=@(args => ViewModel.GenerateHolder()) />
+                </RadzenStack>
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn class="rz-p-5">
+            <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width: 420px">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
+                    <RadzenStack Gap="0">
+                        <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">Role</RadzenText>
+                        <RadzenText TextStyle="TextStyle.H4"><b>Verifier</b></RadzenText>
+                    </RadzenStack>
+                </RadzenStack>
+                <RadzenCard class="rz-background-color-primary-light rz-shadow-0 rz-border-radius-0 rz-p-8" style="margin: 1rem calc(-1 * var(--rz-card-padding));">
+                    <RadzenText TextStyle="TextStyle.H6" TextAlign="TextAlign.Left" class="rz-color-on-primary-light"><strong>Description</strong></RadzenText>
+                    <RadzenRow RowGap="0">
+                        <RadzenColumn>
+                            <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">The Verifier plays the part of an application. This role will create a DID and two DID Documents: Auth and Profile. The Verifier will generate an Auth Request and receive a Auth Response from the Holder. The Verifier will validate the Holder's Identity.</RadzenText>
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenCard>
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0">
+                    <RadzenButton Variant="Variant.Text" Text="Select & Generate DID" Click=@(args => ViewModel.GenerateVerifier()) />
+                </RadzenStack>
+            </RadzenCard>
+        </RadzenColumn>
+    </RadzenRow>
+</div>
+
+@code
+{
+
+}
