@@ -1,3 +1,35 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
 
-Its Time to Control your Identity!
+<RadzenCard Variant="Variant.Filled" Class="rz-mb-2 rz-mx-auto" Style="max-width: 420px">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
+        <RadzenImage Path="https://media.licdn.com/dms/image/C4D0BAQG0ElZr93J3JA/company-logo_100_100/0/1629998440364?e=1695859200&v=beta&t=IOB9PcSNFAtcc1HKWum_zttXxnE7ojAieF5WcBhNi1Q" Style="width: 100px; height: 100px; border-radius: 50%;" />
+        <RadzenStack Gap="0">
+            <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">Employee</RadzenText>
+            <RadzenText TextStyle="TextStyle.Body1"><b>Kyle Johns</b></RadzenText>
+            <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0">Company</RadzenText>
+            <RadzenText TextStyle="TextStyle.Body1"><b>BaseTwo Interactive</b></RadzenText>
+        </RadzenStack>
+    </RadzenStack>
+</RadzenCard>
+
+<RadzenCard Variant="Variant.Filled" Class="rz-mb-2 rz-mx-auto" Style="max-width: 420px">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
+        <RadzenImage Path="https://www.onenewspage.com/en/knowledge/Ohio-State-University_20190130.jpg" Style="width: 100px; height: 100px; border-radius: 50%;" />
+        <RadzenStack Gap="0">
+            <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">Alumni</RadzenText>
+            <RadzenText TextStyle="TextStyle.Body1"><b>Kyle Johns</b></RadzenText>
+            <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0">Diploma</RadzenText>
+            <RadzenText TextStyle="TextStyle.Body1"><b>B.S. of Computer Science</b></RadzenText>
+        </RadzenStack>
+    </RadzenStack>
+</RadzenCard>
+
+<RadzenButton Icon="aspect_ratio" Text="Scan QR Code" Style="width: 100%" Click=StartScanner />
+
+@code {
+    void StartScanner()
+    {
+        NavigationManager.NavigateTo("barcodescanner");
+    }
+}

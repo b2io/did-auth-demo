@@ -1,5 +1,8 @@
-﻿using DidAuthDemo.Mobile.Data;
+﻿using Microsoft.AspNetCore.Components.WebView.Maui;
 using Microsoft.Extensions.Logging;
+#if ANDROID
+using DidAuthDemo.Mobile.Platforms.Android;
+#endif
 
 namespace DidAuthDemo.Mobile
 {
@@ -13,6 +16,12 @@ namespace DidAuthDemo.Mobile
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                })
+                .ConfigureMauiHandlers(handlers =>
+                {
+#if ANDROID
+                    handlers.AddHandler<BlazorWebView, MauiBlazorWebViewHandler>();
+#endif
                 });
 
             builder.Services.AddMauiBlazorWebView();
@@ -22,7 +31,6 @@ namespace DidAuthDemo.Mobile
 		builder.Logging.AddDebug();
 #endif
 
-            builder.Services.AddSingleton<WeatherForecastService>();
 
             return builder.Build();
         }
