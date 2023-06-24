@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidAuthDemo.Core", "DidAuth
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidAuthDemo.Maui", "DidAuthDemo.Maui\DidAuthDemo.Maui.csproj", "{81589E3D-4B58-4584-A380-87760F562205}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DidAuthDemo.Issuer", "DidAuthDemo.Issuer\DidAuthDemo.Issuer.csproj", "{4E0F017A-865A-4B5A-AEFE-C1B2FCB4B3E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidAuthDemo.Issuer", "DidAuthDemo.Issuer\DidAuthDemo.Issuer.csproj", "{4E0F017A-865A-4B5A-AEFE-C1B2FCB4B3E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
