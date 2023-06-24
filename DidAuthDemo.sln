@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidAuthDemo.Maui", "DidAuth
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidAuthDemo.Issuer", "DidAuthDemo.Issuer\DidAuthDemo.Issuer.csproj", "{4E0F017A-865A-4B5A-AEFE-C1B2FCB4B3E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DidAuthDemo.Web", "DidAuthDemo.Web\DidAuthDemo.Web.csproj", "{1D222177-9C85-4565-BACB-85BF90564013}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{4E0F017A-865A-4B5A-AEFE-C1B2FCB4B3E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E0F017A-865A-4B5A-AEFE-C1B2FCB4B3E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E0F017A-865A-4B5A-AEFE-C1B2FCB4B3E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D222177-9C85-4565-BACB-85BF90564013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D222177-9C85-4565-BACB-85BF90564013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D222177-9C85-4565-BACB-85BF90564013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D222177-9C85-4565-BACB-85BF90564013}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
