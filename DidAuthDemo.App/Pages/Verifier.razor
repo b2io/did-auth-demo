@@ -125,16 +125,16 @@
     async Task ViewAuthDidDocument(DidDocument obj)
     {
         var result = await DialogService.OpenAsync("View Auth DID", ds =>
-    @<RadzenStack Gap="1.5rem">
-        <p>
-            <pre>@(JsonSerializer.Serialize(obj, new JsonSerializerOptions() { WriteIndented = true }))</pre>
-        </p>
-        <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-            <RadzenStack Orientation="Orientation.Horizontal">
-                <RadzenButton Text="Ok" Click="() => ds.Close(true)" Style="width: 80px;" />
+            @<RadzenStack Gap="1.5rem">
+                <p>
+                    <pre>@(JsonSerializer.Serialize(obj, new JsonSerializerOptions() { WriteIndented = true }))</pre>
+                </p>
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                        <RadzenButton Text="Ok" Click="() => ds.Close(true)" Style="width: 80px;" />
+                    </RadzenStack>
+                </RadzenStack>
             </RadzenStack>
-        </RadzenStack>
-    </RadzenStack>
         );
     }
 

@@ -1,12 +1,46 @@
 ﻿@inherits LayoutComponentBase
 
+@using CardanoSharp.Blazor.Components;
+@using CardanoSharp.Blazor.Components.Models;
+@using CardanoSharp.Blazor.Components.Enums;
+@using CardanoSharp.Blazor.Components.Utils;
+@using CardanoSharp.Blazor.Components.ViewModels;
+
+@inject DialogService DialogService
+
 <PageTitle>DidAuthDemo.Web</PageTitle>
 
 <RadzenLayout style="height: 100%">
     <RadzenHeader>
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
-            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
-            <RadzenLabel Text="Header" />
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Gap="0">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
+                <RadzenLabel Text="Header" />
+            </RadzenStack>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" class="rz-pr-3">
+                <WalletConnector @ref="myWebWallets" PersistConnectedWallet="true" OutputDebug="true" OnConnect="WalletConnected" OnDisconnect="WalletDisconnected">
+                <WalletConnectorButtonContent>
+                        @if (!context.Initialized)
+                        {
+                            <div>INTIALIZING...</div>
+                        }
+                        else if (context.Connecting)
+                        {
+                            <div>CONNECTING...</div>
+                        }
+                        else if (context.IsConnected)
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Click=ShowWalletListDialog Style="text-transform: capitalize;">Connected <img style="width: 18px;" src="@context.ConnectedWallet!.Icon" title="@context.ConnectedWallet.Name" /></RadzenButton>
+                        }
+                        else
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Click=ShowWalletListDialog Style="text-transform: capitalize;">Connect Wallet</RadzenButton>
+                        }
+                </WalletConnectorButtonContent>
+                <WalletsModalContent>
+                </WalletsModalContent>
+            </WalletConnector>
+            </RadzenStack>
         </RadzenStack>
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded="@sidebar1Expanded">
@@ -29,6 +63,97 @@
     </RadzenFooter>
 </RadzenLayout>
 
+<RadzenDialog />
+<RadzenNotification />
+<RadzenContextMenu />
+<RadzenTooltip />
+
 @code {
     bool sidebar1Expanded = true;
+    WalletConnector myWebWallets;
+
+    public async void OpenWallet()
+    {
+        if (myWebWallets != null && myWebWallets.Initialized)
+        {
+            if (myWebWallets.Connected)
+            {
+                var result = await myWebWallets.GetBalance();
+            }
+        }
+    }
+
+    private bool _isWalletsVisible;
+    private List<string> DisplayResult = new List<string>();
+
+    private void WalletConnected()
+    {
+        DisplayResult.Clear();
+        DisplayResult.Add($"Wallet connected event.");
+    }
+
+    private void WalletDisconnected()
+    {
+        DisplayResult.Clear();
+        DisplayResult.Add($"Wallet disconnected event.");
+    }
+
+    async Task ShowWalletListDialog()
+    {
+        var result = await DialogService.OpenAsync("Choose a Wallet", ds =>
+            @<RadzenStack Gap="1.5rem">
+                <RadzenStack Orientation="Orientation.Vertical" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                @if (myWebWallets.Connected)
+                    {
+                        <RadzenStack>
+                            <ul>
+                                <li>Connected wallet: <img style="width: 18px;" src="@myWebWallets.ConnectedWallet!.Icon" title="@myWebWallets.ConnectedWallet.Name" /></li>
+                                <li>Balance: @myWebWallets.ConnectedWallet.BalanceAda₳</li>
+                        <RadzenButton Click=@(args => DisconnectCurrentWallet(ds))>Disconnect</RadzenButton>
+                            </ul>
+                        </RadzenStack>
+                    }
+                    else
+                    {
+                        <RadzenStack Orientation="Orientation.Horizontal">
+                            @foreach (WalletExtensionState wallet in myWebWallets.GetWalletExtensionStates().Where(x => x.Name.Equals("Nami") || x.Name.Equals("Eternl") || x.Name.Equals("Flint")))
+                                {
+                                    <RadzenCard Variant="Variant.Flat" Class="rz-my-12 rz-mx-auto" Style="max-width: 150px">
+                                        <RadzenStack Gap="0" AlignItems="AlignItems.Center">
+                                            <RadzenImage Path="@wallet.Icon" Style="width: 75px; height: 75px; border-radius: 50%;" />
+                                            <RadzenText TextStyle="TextStyle.Body1">@wallet.Name</RadzenText>
+                                        @if (wallet.Installed)
+                                        {
+                                            <RadzenButton Variant="Variant.Text" Click=@(args => ConnectSelectedWallet(wallet, ds))>Connect</RadzenButton>
+                                        }
+                                        else
+                                        {
+                                            <RadzenLink Path="@wallet.Url">
+                                                <RadzenButton Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary">Install</RadzenButton>
+                                            </RadzenLink>
+                                        }
+                                        </RadzenStack>
+                                    </RadzenCard>
+                            }
+                        </RadzenStack>
+                    }
+                    <RadzenStack Orientation="Orientation.Horizontal">
+                        <RadzenButton Text="Close" Click="() => ds.Close(true)" Style="width: 80px;" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenStack>
+    );
+    }
+
+    async Task ConnectSelectedWallet(WalletExtensionState wallet, DialogService ds)
+    {
+        await myWebWallets.ConnectWalletAsync(wallet.Key, false);
+        ds.Close(true);
+    }
+
+    async Task DisconnectCurrentWallet(DialogService ds)
+    {
+        await myWebWallets.DisconnectWalletAsync();
+        ds.Close(true);
+    }
 }

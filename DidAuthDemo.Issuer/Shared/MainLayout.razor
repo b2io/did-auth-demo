@@ -1,5 +1,9 @@
 ﻿@inherits LayoutComponentBase
 
+@using CardanoSharp.Blazor.Components;
+@using CardanoSharp.Blazor.Components.Models;
+@using CardanoSharp.Blazor.Components.Enums;
+
 <PageTitle>DidAuthDemo.Issuer</PageTitle>
 
 <RadzenLayout style="height: 100%">
@@ -7,6 +11,9 @@
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
             <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
             <RadzenLabel Text="Header" />
+            <div><p>dd</p>
+            </div>
+            
         </RadzenStack>
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded="@sidebar1Expanded">
@@ -31,4 +38,16 @@
 
 @code {
     bool sidebar1Expanded = true;
+    WalletConnector myWebWallets;
+
+    public async void OpenWallet()
+    {
+        if (myWebWallets != null && myWebWallets.Initialized)
+        {
+            if (myWebWallets.Connected)
+            {
+                var result = await myWebWallets.GetBalance();
+            }
+        }
+    }
 }
