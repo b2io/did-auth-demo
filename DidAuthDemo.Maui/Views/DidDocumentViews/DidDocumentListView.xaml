@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodel="clr-namespace:DidAuthDemo.Maui.ViewModels.DidDocumentViewModels"
+             xmlns:model="clr-namespace:DidAuthDemo.Maui.Models"
+             x:Class="DidAuthDemo.Maui.Views.DidDocumentViews.DidDocumentListView"
+             Title="DIDs">
+    
+    <ContentPage.BindingContext>
+        <viewmodel:DidDocumentListViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+        EventName="Appearing"
+        Command="{Binding LoadDIDsCommand}" />
+    </ContentPage.Behaviors>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <VerticalStackLayout Padding="20">
+
+        <Grid HorizontalOptions="Center"
+              RowDefinitions="*, *"
+              IsVisible="{Binding HasDids, Converter={StaticResource InvertedBoolConverter}}">
+            <Label Text="No DIDs Found" 
+                   FontSize="Large" 
+                   HorizontalTextAlignment="Center" 
+                   Margin="0, 0, 0, 20"/>
+        </Grid>  
+
+        <CollectionView IsVisible="{Binding HasDids}"
+                        ItemsSource="{Binding Dids}"
+                        Margin="0, 0, 0, 20">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Did">
+                    <Grid Padding="10">
+                        <Frame HeightRequest="50" Style="{StaticResource CardView}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DidDocumentListViewModel}}, Path=DidSelectedCommand}"
+                                        CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                            <Label Text="{Binding Name}" 
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   FontSize="Large"/>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Grid.Row="1"
+                    Text="Create DID Document"
+                    FontSize="Body"
+                    Command="{Binding CreateNewDidDocumentCommand}"></Button>
+
+    </VerticalStackLayout>
+
+</ContentPage>

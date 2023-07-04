@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DidAuthDemo.Maui.Views.KeyViews.MnemonicInfoView"
+             Title="Mnemonic Info">
+    <VerticalStackLayout>
+        <Label 
+            Text="You are about to see a list of words. Write it down and never lose!"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+    </VerticalStackLayout>
+</ContentPage>

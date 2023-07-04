@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodel="clr-namespace:DidAuthDemo.Maui.ViewModels.DidDocumentViewModels"
+             xmlns:cc="clr-namespace:DidAuthDemo.Maui.Converters"
+             xmlns:model="clr-namespace:DidAuthDemo.Maui.Data"
+             x:Class="DidAuthDemo.Maui.Views.DidDocumentViews.DidDocumentDetailView"
+             Title="Did Document">
+
+    <ContentPage.BindingContext>
+        <viewmodel:DidDocumentDetailViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+        EventName="Appearing"
+        Command="{Binding LoadDidCommand}" />
+    </ContentPage.Behaviors>
+
+    <ContentPage.Resources>
+        <cc:DidTypeDisplayConverter x:Key="didTypeDisplay" />
+        <cc:ResolutionTypeDisplayConverter x:Key="resolutionTypeDisplay" />
+        <toolkit:IsStringNotNullOrEmptyConverter  x:Key="IsStringNotNullOrEmptyConverter" />
+    </ContentPage.Resources>
+
+    <VerticalStackLayout>
+        
+        <Label Text="{Binding Did.Name}"
+               Padding="20, 10, 20, 10"
+               FontSize="Title"
+               VerticalOptions="Center" />
+
+        <Grid ColumnDefinitions="*,*"
+              RowDefinitions="*,*,*"
+              Padding="10">
+
+            <VerticalStackLayout Padding="10">
+
+                <Label Text="DID Type"
+                       FontSize="Small"/>
+
+                <Label Text="{Binding Did.DidType, 
+                        Converter={StaticResource didTypeDisplay}}"
+                       FontSize="Large"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Padding="10"
+                                 Grid.Column="1">
+
+                <Label Text="Resolution Type"
+                       FontSize="Small"/>
+
+                <Label Text="{Binding Did.Identifier, 
+                        Converter={StaticResource resolutionTypeDisplay}}"
+                       FontSize="Large"/>
+
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Padding="10"
+                                 Grid.ColumnSpan="2"
+                                 Grid.Row="1"
+                                 IsVisible="{Binding Did.Domain, Converter={StaticResource IsStringNotNullOrEmptyConverter}}">
+
+                <Label Text="Domain"
+                    FontSize="Small"/>
+
+                <Label Text="{Binding Did.Domain}"
+                    FontSize="Large"/>
+
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Padding="10"
+                                 Grid.ColumnSpan="2"
+                                 Grid.Row="1"
+                                 IsVisible="{Binding Did.GithubUsername, Converter={StaticResource IsStringNotNullOrEmptyConverter}}">
+
+                <Label Text="Domain"
+                    FontSize="Small"/>
+
+                <Label Text="{Binding Did.GithubUsername}"
+                    FontSize="Large"/>
+
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Padding="10"
+                                 Grid.Row="2">
+
+                <Label Text="Key"
+                       FontSize="Small"/>
+
+                <Label Text="{Binding Key.Name}"
+                       FontSize="Large"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Padding="10"
+                                 Grid.Column="1"
+                                 Grid.Row="2">
+
+                <Label Text="Index"
+                       FontSize="Small"/>
+
+                <Label Text="{Binding Did.IndexDerivation}"
+                       FontSize="Large"/>
+
+            </VerticalStackLayout>
+
+        </Grid>
+
+        <Button Text="Copy"
+                Margin="20, 10"
+                FontSize="Medium"></Button>
+
+        <Button Text="Verify"
+                Margin="20, 10"
+                FontSize="Medium"></Button>
+        
+    </VerticalStackLayout>
+</ContentPage>

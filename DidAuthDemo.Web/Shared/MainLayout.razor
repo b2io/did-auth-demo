@@ -5,6 +5,15 @@
 @using CardanoSharp.Blazor.Components.Enums;
 @using CardanoSharp.Blazor.Components.Utils;
 @using CardanoSharp.Blazor.Components.ViewModels;
+@using CardanoSharp.Wallet.Encoding;
+@using CardanoSharp.Wallet.Extensions.Models;
+@using CardanoSharp.Wallet.Extensions;
+@using CardanoSharp.Wallet.Models.Addresses;
+@using CardanoSharp.Wallet.Models.Keys;
+@using CardanoSharp.Wallet.Utilities;
+@using Chaos.NaCl;
+@using PeterO.Cbor2;
+@using System.Text.Json;
 
 @inject DialogService DialogService
 
@@ -85,11 +94,28 @@
 
     private bool _isWalletsVisible;
     private List<string> DisplayResult = new List<string>();
+    private string sig = string.Empty;
+    private string vkey = string.Empty;
+    private bool validate = false;
 
-    private void WalletConnected()
+    private async void WalletConnected()
     {
-        DisplayResult.Clear();
-        DisplayResult.Add($"Wallet connected event.");
+        // var address = await myWebWallets.GetChangeAddress();        
+        // var stakeAddress = address.GetStakeAddress();
+        var message = System.Text.Encoding.UTF8.GetBytes("Heres an awesome message to sign!");
+        // var signData = await myWebWallets.SignData(Bech32.Decode(stakeAddress.ToString(), out _, out _).ToStringHex(), message.ToStringHex());
+
+        // var vkeyWitness = new VKeyWitness();
+        //vkey = ((string)CBORObject.DecodeFromBytes(signData.Key.HexToByteArray()).DecodeValueByCborType());
+        // vkeyWitness.VKey = new PublicKey(key, null);
+        //sig = ((string)CBORObject.DecodeFromBytes(signData.Signature.HexToByteArray()).DecodeValueByCborType());
+        //vkey = Bech32.Decode(stakeAddress.ToString(), out _, out _).ToStringHex();
+
+        //var pubkey = new PublicKey("DC0AF873F19E4E3ED440281164B16F340577C0FD148D860A4C30162A2EB7DD1F".HexToByteArray(), null);
+        //validate = pubkey.Verify(message, "679F88A1573A842AF4C323AEA051D6F47A6C60547DF30FB92078E6FCF2544D8402AA09B72E20CA473685D024726222B7513D381D4FE02CB85E96BB8DE01A7404".HexToByteArray());
+        var signature = "679F88A1573A842AF4C323AEA051D6F47A6C60547DF30FB92078E6FCF2544D8402AA09B72E20CA473685D024726222B7513D381D4FE02CB85E96BB8DE01A7404".HexToByteArray();
+        var key = "DC0AF873F19E4E3ED440281164B16F340577C0FD148D860A4C30162A2EB7DD1F".HexToByteArray();
+        validate = Ed25519.Verify(signature, message, key);
     }
 
     private void WalletDisconnected()
@@ -108,8 +134,11 @@
                         <RadzenStack>
                             <ul>
                                 <li>Connected wallet: <img style="width: 18px;" src="@myWebWallets.ConnectedWallet!.Icon" title="@myWebWallets.ConnectedWallet.Name" /></li>
-                                <li>Balance: @myWebWallets.ConnectedWallet.BalanceAda₳</li>
-                        <RadzenButton Click=@(args => DisconnectCurrentWallet(ds))>Disconnect</RadzenButton>
+
+                        <li>vkey: @vkey</li>
+                        <li>sig: @sig</li>
+                        <li>Verified: @validate</li>
+                                <RadzenButton Click=@(args => DisconnectCurrentWallet(ds))>Disconnect</RadzenButton>
                             </ul>
                         </RadzenStack>
                     }

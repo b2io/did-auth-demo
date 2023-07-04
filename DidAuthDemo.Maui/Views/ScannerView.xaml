@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             x:Class="DidAuthDemo.Maui.Views.ScannerView"
+             Title="ScannerView">
+
+    <ScrollView>
+        <Grid>
+            <VerticalStackLayout
+                Spacing="25"
+                Padding="30,0" HorizontalOptions="Center" VerticalOptions="Center">
+
+                <zxing:CameraBarcodeReaderView x:Name="cameraBarcodeReaderView" 
+                                               IsDetecting="True"
+                                               IsTorchOn="False"
+                                               BarcodesDetected="BarcodesDetected" />
+
+                <Label x:Name="barcodeReader" FontSize="32" HorizontalTextAlignment="Center" />
+
+            </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
+</ContentPage>
