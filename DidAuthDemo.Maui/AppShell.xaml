@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="DidAuthDemo.Maui.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:didviews="clr-namespace:DidAuthDemo.Maui.Views.DidDocumentViews"
+    xmlns:credviews="clr-namespace:DidAuthDemo.Maui.Views.CredentialViews"
+    Shell.FlyoutBehavior="Disabled">
+
+    <TabBar>
+        <Tab Title="DIDs" Icon="key.png">
+            <ShellContent ContentTemplate="{DataTemplate didviews:DidDocumentListView}" />
+        </Tab>
+        <Tab Title="Credentials" Icon="idcard.png">
+            <ShellContent ContentTemplate="{DataTemplate credviews:CredentialListView}" />
+        </Tab>
+    </TabBar>
+
+</Shell>

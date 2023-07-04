@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodel="clr-namespace:DidAuthDemo.Maui.ViewModels.KeyViewModels"
+             x:Class="DidAuthDemo.Maui.Views.KeyViews.ShowMnemonicView"
+             Title="Mnemonic">
+
+    <ContentPage.BindingContext>
+        <viewmodel:ShowMnemonicViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+        EventName="Appearing"
+        Command="{Binding GenerateMnemonicCommand}" />
+    </ContentPage.Behaviors>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <VerticalStackLayout>
+        <Label 
+            Text="Mnemonic Phrase"
+            FontSize="Title"
+            Margin="0, 20, 0, 0"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <Label 
+            Text="This list of words is known as a Mnemonic Seed Phrase. Please write these down so incase you lose or damage your device you will be able to recover your keys."
+            FontSize="Header"
+            Margin="20, 10, 20, 0"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+        <Grid Margin="30, 20, 0, 0"
+              ColumnDefinitions="*, *, *"
+              RowSpacing="10"
+              RowDefinitions="*, *, *, *, *">
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="1. " />
+                        <Span FontSize="Medium" Text="{Binding Words[0]}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Label Grid.Column="1">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="2. " />
+                        <Span FontSize="Medium" Text="{Binding Words[1]}" />
+                    </FormattedString>
+                </Label.FormattedText></Label>
+
+            <Label Grid.Column="2">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="3. " />
+                        <Span FontSize="Medium" Text="{Binding Words[2]}" />
+                    </FormattedString>
+                </Label.FormattedText></Label>
+
+            <Label Grid.Row="1">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="4. " />
+                        <Span FontSize="Medium" Text="{Binding Words[3]}" />
+                    </FormattedString>
+                </Label.FormattedText></Label>
+
+            <Label Grid.Row="1" Grid.Column="1">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="5. " />
+                        <Span FontSize="Medium" Text="{Binding Words[4]}" />
+                    </FormattedString>
+                </Label.FormattedText></Label>
+
+            <Label Grid.Row="1" Grid.Column="2">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="6. " />
+                        <Span FontSize="Medium" Text="{Binding Words[5]}" />
+                    </FormattedString>
+                </Label.FormattedText></Label>
+
+            <Label Grid.Row="2">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="7. " />
+                        <Span FontSize="Medium" Text="{Binding Words[6]}" />
+                    </FormattedString>
+                </Label.FormattedText></Label>
+
+            <Label Grid.Row="2" Grid.Column="1">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="8. " />
+                        <Span FontSize="Medium" Text="{Binding Words[7]}" />
+                    </FormattedString>
+                </Label.FormattedText></Label>
+
+            <Label Grid.Row="2" Grid.Column="2">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="9. " />
+                        <Span FontSize="Medium" Text="{Binding Words[8]}" />
+                    </FormattedString>
+                </Label.FormattedText></Label>
+
+            <Label Grid.Row="3">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="10. " />
+                        <Span FontSize="Medium" Text="{Binding Words[9]}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Label Grid.Row="3" Grid.Column="1">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="11. " />
+                        <Span FontSize="Medium" Text="{Binding Words[10]}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Label Grid.Row="3" Grid.Column="2">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="12. " />
+                        <Span FontSize="Medium" Text="{Binding Words[11]}" />
+                    </FormattedString>
+                </Label.FormattedText></Label>
+
+            <Label Grid.Row="4">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="13. " />
+                        <Span FontSize="Medium" Text="{Binding Words[12]}" />
+                    </FormattedString>
+                </Label.FormattedText></Label>
+
+            <Label Grid.Row="4" Grid.Column="1">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="14. " />
+                        <Span FontSize="Medium" Text="{Binding Words[13]}" />
+                    </FormattedString>
+                </Label.FormattedText></Label>
+
+            <Label Grid.Row="4" Grid.Column="2">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontSize="Medium" Text="15. " />
+                        <Span FontSize="Medium" Text="{Binding Words[14]}" />
+                    </FormattedString>
+                </Label.FormattedText></Label>
+        </Grid>
+
+        <StackLayout Orientation="Horizontal"
+                     Margin="20, 20, 20, 0">
+            <CheckBox IsChecked="{Binding Acknowledged}" />
+            <Label Text="I have written down my mnemonic seed phrase"
+                   VerticalOptions="Center"/>
+        </StackLayout>
+
+        <Entry Placeholder="Nickname" 
+               Margin="20, 10, 20, 0"
+               Text="{Binding Name}" />
+
+        <Entry Placeholder="Password" 
+               IsPassword="True"
+               Margin="20, 10, 20, 0"
+               Text="{Binding Password}" />
+
+        <Button Command="{Binding CreateKeyCommand}" 
+                Text="Create Key"
+                Margin="20, 10, 20, 0"/>
+
+    </VerticalStackLayout>
+</ContentPage>

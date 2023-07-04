@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodel="clr-namespace:DidAuthDemo.Maui.ViewModels.DidDocumentViewModels"
+             xmlns:model="clr-namespace:DidAuthDemo.Maui.Data"
+             x:Class="DidAuthDemo.Maui.Views.DidDocumentViews.PickResolutionTypeView"
+             Title="Finalize DID Document">
+
+    <ContentPage.BindingContext>
+        <viewmodel:PickResolutionTypeViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+        EventName="Appearing"
+        Command="{Binding CheckDidCommand}" />
+    </ContentPage.Behaviors>
+
+    <VerticalStackLayout Padding="18">
+
+        <Grid ColumnDefinitions="*,*" Padding="2, 0, 2, 0">
+
+            <VerticalStackLayout>
+
+                <Label Text="Key" />
+
+                <Label Text="{Binding KeyName}"
+               FontSize="Large" />
+
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Column="1">
+
+                <Label Text="DID Type" />
+
+                <Label Text="{Binding DidTypeName}"
+               FontSize="Large" />
+
+            </VerticalStackLayout>
+
+        </Grid>
+
+        <Entry Placeholder="Name" 
+               FontSize="Large" 
+               Margin="0, 20, 0, 0" Text="{Binding Name}" />
+
+        <Picker Margin="0, 20, 0, 0" 
+                Title="Resolution Type"
+                FontSize="Large"
+                SelectedItem="{Binding ResolutionType}">
+            <Picker.Items>
+                <x:String>Web</x:String>
+                <x:String>Github</x:String>
+                <x:String>BTI</x:String>
+            </Picker.Items>
+        </Picker>
+
+        <Entry Placeholder="Domain (www.example.com)" 
+               FontSize="Large" 
+               IsVisible="{Binding ShowDomain}"
+               Margin="0, 20, 0, 0" Text="{Binding Domain}" />
+
+        <Entry Placeholder="Name" 
+               FontSize="Large" 
+               IsVisible="{Binding ShowGithubUsername}"
+               Margin="0, 20, 0, 0" Text="{Binding GithubUsername}" />
+
+        <Button Margin="0, 20, 0, 0"
+                Command="{Binding SubmitDidCommand}"
+                Text="Create DID Document" />
+
+    </VerticalStackLayout>
+</ContentPage>
