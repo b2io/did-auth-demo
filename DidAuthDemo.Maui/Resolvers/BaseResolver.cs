@@ -8,7 +8,7 @@ namespace DidAuthDemo.Maui.Resolvers;
 
 public interface IBaseResolver
 {
-    bool VerifyDidDocument(Did did, string password);
+    Task<bool> VerifyDidDocument(Did did, string password);
 }
 
 public abstract class BaseResolver : IBaseResolver
@@ -20,7 +20,7 @@ public abstract class BaseResolver : IBaseResolver
         _keyDatabase = new KeyDatabase();
     }
 
-    public abstract bool VerifyDidDocument(Did did, string password);
+    public abstract Task<bool> VerifyDidDocument(Did did, string password);
 
     protected async Task<Key> UnlockKey(int keyId, string password)
     {

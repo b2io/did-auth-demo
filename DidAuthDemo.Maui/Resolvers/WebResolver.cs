@@ -1,4 +1,5 @@
 ﻿using DidAuthDemo.Maui.Models;
+using System.Net.Http.Json;
 
 namespace DidAuthDemo.Maui.Resolvers;
 
@@ -10,8 +11,23 @@ public interface IWebResolver : IBaseResolver { }
 /// </summary>
 public class WebResolver : BaseResolver, IWebResolver
 {
-    public override bool VerifyDidDocument(Did did, string password)
+    public override async Task<bool> VerifyDidDocument(Did did, string password)
     {
-        throw new NotImplementedException();
+        var key = UnlockKey(did.KeyId, password);
+
+        //get did document
+        using var client = new HttpClient();
+
+        var didDomainUrl = $"{did.Domain}/.well-known/did.json";
+        var response = await client.GetFromJsonAsync<DidDocument>(didDomainUrl);
+
+        //couldn't successfully get document
+        if (!response.suc)
+            return false;
+
+
+
+        //validate did document public key
+
     }
 }
