@@ -53,6 +53,7 @@
 	  <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.5" />
 	  <PackageReference Include="ZXing.Net.Maui" Version="0.3.0-preview.1" />
 	  <PackageReference Include="ZXing.Net.Maui.Controls" Version="0.3.0-preview.1" />
+    <PackageReference Include="SimpleBase" Version="4.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
