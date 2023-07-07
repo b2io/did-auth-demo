@@ -46,6 +46,7 @@ public partial class ShowMnemonicViewModel : ObservableObject
     async void CreateKey()
     {
         MasterNodeDerivation masterNode = mnemonic.GetMasterNode();
+        masterNode.SetPublicKey();
         var key = new Key() 
         { 
             Name = Name,

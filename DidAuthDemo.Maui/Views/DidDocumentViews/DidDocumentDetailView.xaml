@@ -25,10 +25,15 @@
     </ContentPage.Resources>
 
     <VerticalStackLayout>
-        
-        <Label Text="{Binding Did.Name}"
-               Padding="20, 10, 20, 10"
+
+        <Label Text="{Binding Did.Identifier}"
+               Padding="20, 10, 20, 0"
                FontSize="Title"
+               VerticalOptions="Center" />
+
+        <Label Text="{Binding Did.Name}"
+               Padding="20, 0, 20, 0"
+               FontSize="Medium"
                VerticalOptions="Center" />
 
         <Grid ColumnDefinitions="*,*"
@@ -109,11 +114,30 @@
 
         <Button Text="Copy"
                 Margin="20, 10"
-                FontSize="Medium"></Button>
+                FontSize="Medium"
+                Command="{Binding CopyDidDocumentCommand}"></Button>
+
+        <Label Text="Verify DID Resolution"
+               Padding="20, 10, 20, 10"
+               FontSize="Medium"
+               FontAttributes="Bold" />
+
+        <Label Text="Please enter your password and click verify to ensure you have properly stored your DID Document."
+               Padding="20, 10, 20, 10" />
+
+        <Entry Placeholder="Password"
+               IsPassword="True"
+               Margin="20, 10"
+               Text="{Binding Password}" />
 
         <Button Text="Verify"
                 Margin="20, 10"
-                FontSize="Medium"></Button>
+                FontSize="Medium"
+                Command="{Binding VerifyDidDocumentCommand}"
+                IsEnabled="{Binding Password, Converter={StaticResource IsStringNotNullOrEmptyConverter}}" />
+
+        <Label Text="{Binding VerificationResult}"
+               Padding="20, 10, 20, 10" />
         
     </VerticalStackLayout>
 </ContentPage>

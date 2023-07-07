@@ -1,12 +1,10 @@
 ﻿using CardanoSharp.Wallet.Extensions.Models;
 using CardanoSharp.Wallet.Models.Keys;
 using DidAuthDemo.Maui.Models;
-using Kotlin.Contracts;
 using SimpleBase;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using static Android.Icu.Text.RelativeDateTimeFormatter;
 
 namespace DidAuthDemo.Maui.Resolvers;
 
@@ -26,8 +24,12 @@ public class WebResolver : BaseResolver, IWebResolver
         // Grab the DID Document from the Website associated with DID
         using var client = new HttpClient();
 
-        var didDomainUrl = $"{did.Domain}/.well-known/did.json";
-        HttpResponseMessage res = await client.GetAsync(didDomainUrl);
+        var uriBuilder = new UriBuilder();
+        uriBuilder.Scheme = "https";
+        uriBuilder.Host = did.Domain;
+        uriBuilder.Path = ".well-known/did.json";
+
+        HttpResponseMessage res = await client.GetAsync(uriBuilder.Uri);
         DidDocument didDocument;
         if (res.IsSuccessStatusCode)
         {
@@ -45,6 +47,7 @@ public class WebResolver : BaseResolver, IWebResolver
         // Validate DID Document using stored Private Key 
         //    and Public Key in DID Document
         var privateKey = JsonSerializer.Deserialize<PrivateKey>(key.PrivateKey);
+        var pubKey = JsonSerializer.Deserialize<PublicKey>(key.PublicKey);
         var publicKeyObj = didDocument.PublicKeys.FirstOrDefault(x => x.Id == $"{did.Identifier}#key-1");
         var publicKey = new PublicKey(Base58.Bitcoin.Decode(publicKeyObj.PublicKeyBase58), null);
         var message = Encoding.UTF8.GetBytes("message");
