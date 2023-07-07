@@ -24,7 +24,13 @@ public partial class DidDocumentDetailViewModel : ObservableObject
     string password;
 
     [ObservableProperty]
-    string verificationResult;
+    bool verificationAttempted;
+
+    [ObservableProperty]
+    bool showSpinner;
+
+    [ObservableProperty]
+    bool verificationResult;
 
     private DidDatabase didDatabase;
     private KeyDatabase keyDatabase;
@@ -50,17 +56,30 @@ public partial class DidDocumentDetailViewModel : ObservableObject
         await Clipboard.Default.SetTextAsync(didDocumentString);
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanVerifyDocument))]
     async void VerifyDidDocument()
     {
+        ShowSpinner = true;
+        VerificationAttempted = false;
+
         var resolver = ResolverFactory.GetResolver(Enum.Parse<ResolutionType>(Did.ResolutionType));
-        var isVerified = await resolver.VerifyDidDocument(Did, Password);
-        if(isVerified)
-        {
-            VerificationResult = "Verification Successful!";
-        }else
-        {
-            VerificationResult = "Verification Failed.";
-        }
+        VerificationResult = await resolver.VerifyDidDocument(Did, Password);
+        await Task.Delay(1000);
+
+        ShowSpinner = false;
+        VerificationAttempted = true;
+    }
+
+    bool CanVerifyDocument() => !string.IsNullOrEmpty(Password)
+        && !ShowSpinner;
+
+    partial void OnShowSpinnerChanged(bool oldValue, bool newValue)
+    {
+        VerifyDidDocumentCommand?.NotifyCanExecuteChanged();
+    }
+
+    partial void OnPasswordChanged(string oldValue, string newValue)
+    {
+        VerifyDidDocumentCommand?.NotifyCanExecuteChanged();
     }
 }

@@ -22,6 +22,7 @@
         <cc:DidTypeDisplayConverter x:Key="didTypeDisplay" />
         <cc:ResolutionTypeDisplayConverter x:Key="resolutionTypeDisplay" />
         <toolkit:IsStringNotNullOrEmptyConverter  x:Key="IsStringNotNullOrEmptyConverter" />
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     </ContentPage.Resources>
 
     <VerticalStackLayout>
@@ -112,7 +113,7 @@
 
         </Grid>
 
-        <Button Text="Copy"
+        <Button Text="Copy Document"
                 Margin="20, 10"
                 FontSize="Medium"
                 Command="{Binding CopyDidDocumentCommand}"></Button>
@@ -130,14 +131,24 @@
                Margin="20, 10"
                Text="{Binding Password}" />
 
-        <Button Text="Verify"
+        <Button Text="Verify Document"
                 Margin="20, 10"
                 FontSize="Medium"
-                Command="{Binding VerifyDidDocumentCommand}"
-                IsEnabled="{Binding Password, Converter={StaticResource IsStringNotNullOrEmptyConverter}}" />
+                Command="{Binding VerifyDidDocumentCommand}" />
 
-        <Label Text="{Binding VerificationResult}"
-               Padding="20, 10, 20, 10" />
-        
+
+        <ActivityIndicator IsVisible="{Binding ShowSpinner}"
+                           IsRunning="True"/>
+        <VerticalStackLayout IsVisible="{Binding VerificationAttempted}">
+            <Label Text="Verification Successful!"
+                   IsVisible="{Binding VerificationResult}"
+                   TextColor="Green"
+                   Padding="20, 10, 20, 10" />
+
+            <Label Text="Verification Failed!"
+                    IsVisible="{Binding VerificationResult, Converter={StaticResource InvertedBoolConverter}}"
+                   TextColor="IndianRed"
+                   Padding="20, 10, 20, 10" />
+        </VerticalStackLayout>
     </VerticalStackLayout>
 </ContentPage>
