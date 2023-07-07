@@ -47,7 +47,6 @@ public class WebResolver : BaseResolver, IWebResolver
         // Validate DID Document using stored Private Key 
         //    and Public Key in DID Document
         var privateKey = JsonSerializer.Deserialize<PrivateKey>(key.PrivateKey);
-        var pubKey = JsonSerializer.Deserialize<PublicKey>(key.PublicKey);
         var publicKeyObj = didDocument.PublicKeys.FirstOrDefault(x => x.Id == $"{did.Identifier}#key-1");
         var publicKey = new PublicKey(Base58.Bitcoin.Decode(publicKeyObj.PublicKeyBase58), null);
         var message = Encoding.UTF8.GetBytes("message");
