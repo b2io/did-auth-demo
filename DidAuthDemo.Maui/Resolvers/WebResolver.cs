@@ -10,8 +10,23 @@ public interface IWebResolver : IBaseResolver { }
 /// </summary>
 public class WebResolver : BaseResolver, IWebResolver
 {
-    public override bool VerifyDidDocument(Did did, string password)
+    public override async Task<bool> VerifyDidDocument(Did did, string password)
     {
-        throw new NotImplementedException();
+        // Unlocked the PrivateKey using the provided password
+        var key = await UnlockKey(did.KeyId, password);
+
+        // Grab the DID Document from the Website associated with DID
+        var uriBuilder = new UriBuilder();
+        uriBuilder.Scheme = "https";
+        uriBuilder.Host = did.Domain;
+        uriBuilder.Path = ".well-known/did.json";
+
+        var didDocumentResponse = await DownloadDidDocument(uriBuilder);
+        
+        if(!didDocumentResponse.IsSuccessful) return false;
+
+        // Validate DID Document using stored Private Key 
+        //    and Public Key in DID Document
+        return VerifyDidDocument(didDocumentResponse.DidDocument, did, key);
     }
 }

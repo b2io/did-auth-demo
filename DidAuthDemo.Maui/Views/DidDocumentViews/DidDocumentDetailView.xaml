@@ -22,13 +22,19 @@
         <cc:DidTypeDisplayConverter x:Key="didTypeDisplay" />
         <cc:ResolutionTypeDisplayConverter x:Key="resolutionTypeDisplay" />
         <toolkit:IsStringNotNullOrEmptyConverter  x:Key="IsStringNotNullOrEmptyConverter" />
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     </ContentPage.Resources>
 
     <VerticalStackLayout>
-        
-        <Label Text="{Binding Did.Name}"
-               Padding="20, 10, 20, 10"
+
+        <Label Text="{Binding Did.Identifier}"
+               Padding="20, 10, 20, 0"
                FontSize="Title"
+               VerticalOptions="Center" />
+
+        <Label Text="{Binding Did.Name}"
+               Padding="20, 0, 20, 0"
+               FontSize="Medium"
                VerticalOptions="Center" />
 
         <Grid ColumnDefinitions="*,*"
@@ -107,13 +113,42 @@
 
         </Grid>
 
-        <Button Text="Copy"
+        <Button Text="Copy Document"
                 Margin="20, 10"
-                FontSize="Medium"></Button>
+                FontSize="Medium"
+                Command="{Binding CopyDidDocumentCommand}"></Button>
 
-        <Button Text="Verify"
+        <Label Text="Verify DID Resolution"
+               Padding="20, 10, 20, 10"
+               FontSize="Medium"
+               FontAttributes="Bold" />
+
+        <Label Text="Please enter your password and click verify to ensure you have properly stored your DID Document."
+               Padding="20, 10, 20, 10" />
+
+        <Entry Placeholder="Password"
+               IsPassword="True"
+               Margin="20, 10"
+               Text="{Binding Password}" />
+
+        <Button Text="Verify Document"
                 Margin="20, 10"
-                FontSize="Medium"></Button>
-        
+                FontSize="Medium"
+                Command="{Binding VerifyDidDocumentCommand}" />
+
+
+        <ActivityIndicator IsVisible="{Binding ShowSpinner}"
+                           IsRunning="True"/>
+        <VerticalStackLayout IsVisible="{Binding VerificationAttempted}">
+            <Label Text="Verification Successful!"
+                   IsVisible="{Binding VerificationResult}"
+                   TextColor="Green"
+                   Padding="20, 10, 20, 10" />
+
+            <Label Text="Verification Failed!"
+                    IsVisible="{Binding VerificationResult, Converter={StaticResource InvertedBoolConverter}}"
+                   TextColor="IndianRed"
+                   Padding="20, 10, 20, 10" />
+        </VerticalStackLayout>
     </VerticalStackLayout>
 </ContentPage>

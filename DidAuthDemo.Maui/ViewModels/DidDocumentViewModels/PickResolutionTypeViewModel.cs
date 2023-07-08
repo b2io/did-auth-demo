@@ -70,6 +70,13 @@ public partial class PickResolutionTypeViewModel : ObservableObject
             _ => throw new NotSupportedException()
         };
 
+        Did.ResolutionType = ResolutionType switch
+        {
+            "Web" => Common.ResolutionType.Web.ToString(),
+            "Github" => Common.ResolutionType.Github.ToString(),
+            _ => throw new NotSupportedException()
+        };
+
         await didDatabase.SaveItemAsync(Did);
         await Shell.Current.GoToAsync($"../../../{nameof(DidDocumentDetailView)}", new Dictionary<string, object>() { { "Id", Did.Id } });
     }
