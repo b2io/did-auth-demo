@@ -1,10 +1,4 @@
-﻿using CardanoSharp.Wallet.Extensions.Models;
-using CardanoSharp.Wallet.Models.Keys;
-using DidAuthDemo.Maui.Models;
-using SimpleBase;
-using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
+﻿using DidAuthDemo.Maui.Models;
 
 namespace DidAuthDemo.Maui.Resolvers;
 
@@ -22,35 +16,17 @@ public class WebResolver : BaseResolver, IWebResolver
         var key = await UnlockKey(did.KeyId, password);
 
         // Grab the DID Document from the Website associated with DID
-        using var client = new HttpClient();
-
         var uriBuilder = new UriBuilder();
         uriBuilder.Scheme = "https";
         uriBuilder.Host = did.Domain;
         uriBuilder.Path = ".well-known/did.json";
 
-        HttpResponseMessage res = await client.GetAsync(uriBuilder.Uri);
-        DidDocument didDocument;
-        if (res.IsSuccessStatusCode)
-        {
-            didDocument = await res.Content.ReadFromJsonAsync<DidDocument>();
-        }
-        else
-        {
-            string msg = await res.Content.ReadAsStringAsync();
-            Console.WriteLine(msg);
-            return false;
-        }
-
-        if (didDocument is null) return false;
+        var didDocumentResponse = await DownloadDidDocument(uriBuilder);
+        
+        if(!didDocumentResponse.IsSuccessful) return false;
 
         // Validate DID Document using stored Private Key 
         //    and Public Key in DID Document
-        var privateKey = JsonSerializer.Deserialize<PrivateKey>(key.PrivateKey);
-        var publicKeyObj = didDocument.PublicKeys.FirstOrDefault(x => x.Id == $"{did.Identifier}#key-1");
-        var publicKey = new PublicKey(Base58.Bitcoin.Decode(publicKeyObj.PublicKeyBase58), null);
-        var message = Encoding.UTF8.GetBytes("message");
-        var signature = privateKey.Sign(message);
-        return publicKey.Verify(message, signature);
+        return VerifyDidDocument(didDocumentResponse.DidDocument, did, key);
     }
 }
