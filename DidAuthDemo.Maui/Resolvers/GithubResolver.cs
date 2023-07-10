@@ -12,9 +12,6 @@ public class GithubResolver : BaseResolver, IGithubResolver
 {
     public override async Task<bool> VerifyDidDocument(Did did, string password)
     {
-        // Unlocked the PrivateKey using the provided password
-        var key = await UnlockKey(did.KeyId, password);
-
         // Grab the DID Document from the Website associated with DID
         var uriBuilder = new UriBuilder();
         uriBuilder.Scheme = "https";
@@ -27,6 +24,6 @@ public class GithubResolver : BaseResolver, IGithubResolver
 
         // Validate DID Document using stored Private Key 
         //    and Public Key in DID Document
-        return VerifyDidDocument(didDocumentResponse.DidDocument, did, key);
+        return await VerifyDidDocument(didDocumentResponse.DidDocument, did, password);
     }
 }

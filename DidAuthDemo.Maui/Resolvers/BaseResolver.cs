@@ -7,6 +7,8 @@ using System;
 using System.Text.Json;
 using SimpleBase;
 using System.Text;
+using DidAuthDemo.Maui.Common;
+using DidAuthDemo.Maui.Derivers;
 
 namespace DidAuthDemo.Maui.Resolvers;
 public record DownloadDidDocumentResponse(bool IsSuccessful, DidDocument DidDocument);
@@ -26,22 +28,6 @@ public abstract class BaseResolver : IBaseResolver
     }
 
     public abstract Task<bool> VerifyDidDocument(Did did, string password);
-
-    protected async Task<Key> UnlockKey(int keyId, string password)
-    {
-        var key = await _keyDatabase.GetAsync(keyId);
-        if (key == null) return null;
-
-        //Deserialize the Private Key so we can Decrypt it
-        //Re-serialize and return so we can sign/verify against
-        //  DID Document that is being resolved
-        key.PrivateKey = JsonSerializer.Serialize(
-            JsonSerializer.Deserialize<PrivateKey>(key.PrivateKey)
-                .Decrypt(password)
-        );
-
-        return key;
-    }
 
     protected async Task<DownloadDidDocumentResponse> DownloadDidDocument(UriBuilder uriBuilder)
     {
@@ -65,14 +51,23 @@ public abstract class BaseResolver : IBaseResolver
         return new DownloadDidDocumentResponse(true, didDocument);
     }
 
-    protected bool VerifyDidDocument(DidDocument didDocument, Did did, Key key)
+    protected async Task<bool> VerifyDidDocument(DidDocument didDocument, Did did, string password)
     {
-        var privateKey = JsonSerializer.Deserialize<PrivateKey>(key.PrivateKey);
+        // Unlocked the PrivateKey using the provided password
+        var key = await _keyDatabase.GetAsync(did.KeyId);
+        if (key == null) return false;
+
+        KeyPair didKeyPair = DeriverFactory
+            .GetKeyDeriver((DidType)did.DidType)
+            .DeriveKey(key, did.IndexDerivation, password);
+
         var publicKeyObj = didDocument.PublicKeys
             .FirstOrDefault(x => x.Id == $"{did.Identifier}#key-1");
+        if(publicKeyObj == null) return false;
+
         var publicKey = new PublicKey(Base58.Bitcoin.Decode(publicKeyObj.PublicKeyBase58), null);
         var message = Encoding.UTF8.GetBytes("message");
-        var signature = privateKey.Sign(message);
+        var signature = didKeyPair.PrivateKey.Sign(message);
         return publicKey.Verify(message, signature);
     }
 }
