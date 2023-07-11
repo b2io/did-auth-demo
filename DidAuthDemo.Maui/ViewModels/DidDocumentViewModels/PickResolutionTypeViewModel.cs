@@ -1,23 +1,28 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CardanoSharp.Wallet.Models.Keys;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DidAuthDemo.Maui.Common;
 using DidAuthDemo.Maui.Data;
+using DidAuthDemo.Maui.Derivers;
 using DidAuthDemo.Maui.Models;
 using DidAuthDemo.Maui.Views.DidDocumentViews;
+using System.Text.Json;
 
 namespace DidAuthDemo.Maui.ViewModels.DidDocumentViewModels;
 
-[QueryProperty(nameof(Did), "Did")]
+[QueryProperty("NewDid", "NewDid")]
 public partial class PickResolutionTypeViewModel : ObservableObject
 {
+    private Key _key;
+
     [ObservableProperty]
-    Did did;
+    Did newDid;
 
     [ObservableProperty]
     string name;
 
     [ObservableProperty]
-    string resolutionType;
+    string selectedResolutionType;
 
     [ObservableProperty]
     string didTypeName;
@@ -37,6 +42,9 @@ public partial class PickResolutionTypeViewModel : ObservableObject
     [ObservableProperty]
     string githubUsername;
 
+    [ObservableProperty]
+    string password;
+
     private KeyDatabase keyDatabase;
     private DidDatabase didDatabase;
 
@@ -49,40 +57,47 @@ public partial class PickResolutionTypeViewModel : ObservableObject
     [RelayCommand]
     async void CheckDid()
     {
-        var key = await keyDatabase.GetAsync(Did.KeyId);
-        KeyName = key.Name;
+        _key = await keyDatabase.GetAsync(NewDid.KeyId);
+        KeyName = _key.Name;
 
-        DidTypeName = ((DidType)Did.DidType).ToString();
+        DidTypeName = ((DidType)NewDid.DidType).ToString();
     }
 
     [RelayCommand(CanExecute = nameof(CanCreateDid))]
     async void SubmitDid()
     {
-        Did.Name = Name;
-        Did.Domain = Domain; 
-        Did.GithubUsername = GithubUsername;
+        NewDid.Name = Name;
+        NewDid.Domain = Domain;
+        NewDid.GithubUsername = GithubUsername;
 
         //determine DID
-        Did.Identifier = ResolutionType switch
+        NewDid.Identifier = SelectedResolutionType switch
         {
-            "Web" => $"did:web:{Did.Domain}",
-            "Github" => $"did:github:{Did.GithubUsername}",
+            "Web" => $"did:web:{NewDid.Domain}",
+            "Github" => $"did:github:{NewDid.GithubUsername}",
             _ => throw new NotSupportedException()
         };
 
-        Did.ResolutionType = ResolutionType switch
+        NewDid.ResolutionType = SelectedResolutionType switch
         {
             "Web" => Common.ResolutionType.Web.ToString(),
             "Github" => Common.ResolutionType.Github.ToString(),
             _ => throw new NotSupportedException()
         };
 
-        await didDatabase.SaveItemAsync(Did);
-        await Shell.Current.GoToAsync($"../../../{nameof(DidDocumentDetailView)}", new Dictionary<string, object>() { { "Id", Did.Id } });
+        KeyPair didKeyPair = DeriverFactory
+            .GetKeyDeriver((DidType)NewDid.DidType)
+            .DeriveKey(_key, NewDid.IndexDerivation, Password);
+
+        NewDid.DidDocument = JsonSerializer.Serialize(await DidUtility.GetDidDocument(NewDid.Identifier, didKeyPair.PublicKey));
+
+        await didDatabase.SaveItemAsync(NewDid);
+        await Shell.Current.GoToAsync($"../../../{nameof(DidDocumentDetailView)}", new Dictionary<string, object>() { { "Id", NewDid.Id } });
     }
 
     bool CanCreateDid() => !string.IsNullOrEmpty(Name)
-        && !string.IsNullOrEmpty(ResolutionType)
+        && !string.IsNullOrEmpty(SelectedResolutionType)
+        && !string.IsNullOrEmpty(Password)
         && (!ShowDomain 
             || (ShowDomain && !string.IsNullOrEmpty(Domain))
         )
@@ -95,10 +110,15 @@ public partial class PickResolutionTypeViewModel : ObservableObject
         SubmitDidCommand?.NotifyCanExecuteChanged();
     }
 
-    partial void OnResolutionTypeChanged(string oldValue, string newValue)
+    partial void OnSelectedResolutionTypeChanged(string oldValue, string newValue)
     {
         SubmitDidCommand?.NotifyCanExecuteChanged();
         ShowDomain = newValue.Equals("Web");
         ShowGithubUsername = newValue.Equals("Github");
+    }
+
+    partial void OnPasswordChanged(string oldValue, string newValue)
+    {
+        SubmitDidCommand?.NotifyCanExecuteChanged();
     }
 }

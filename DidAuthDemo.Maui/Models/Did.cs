@@ -15,4 +15,5 @@ public class Did
     public string ResolutionType { get; set; }
     public string Domain { get; set; }
     public string GithubUsername { get; set; }
+    public string DidDocument { get; set; }
 }

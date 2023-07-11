@@ -48,7 +48,7 @@
         <Picker Margin="0, 20, 0, 0" 
                 Title="Resolution Type"
                 FontSize="Large"
-                SelectedItem="{Binding ResolutionType}">
+                SelectedItem="{Binding SelectedResolutionType}">
             <Picker.Items>
                 <x:String>Web</x:String>
                 <x:String>Github</x:String>
@@ -61,10 +61,15 @@
                IsVisible="{Binding ShowDomain}"
                Margin="0, 20, 0, 0" Text="{Binding Domain}" />
 
-        <Entry Placeholder="Name" 
+        <Entry Placeholder="Github UserName" 
                FontSize="Large" 
                IsVisible="{Binding ShowGithubUsername}"
                Margin="0, 20, 0, 0" Text="{Binding GithubUsername}" />
+
+        <Entry Placeholder="Password of Key"
+               IsPassword="True"
+               FontSize="Large" 
+               Margin="0, 20, 0, 0" Text="{Binding Password}" />
 
         <Button Margin="0, 20, 0, 0"
                 Command="{Binding SubmitDidCommand}"

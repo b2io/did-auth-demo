@@ -51,9 +51,8 @@ public partial class DidDocumentDetailViewModel : ObservableObject
     [RelayCommand]
     async void CopyDidDocument()
     {
-        var didDocument = await DidUtility.GetDidDocument(Did, Key);
-        var didDocumentString = JsonSerializer.Serialize(didDocument);
-        await Clipboard.Default.SetTextAsync(didDocumentString);
+        //move to did creation and just copy from object
+        await Clipboard.Default.SetTextAsync(Did.DidDocument);
     }
 
     [RelayCommand(CanExecute = nameof(CanVerifyDocument))]

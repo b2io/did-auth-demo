@@ -38,7 +38,7 @@ public partial class DidDocumentCreateViewModel : ObservableObject
     [RelayCommand]
     async void KeySelected(Key key)
     {
-        await Shell.Current.GoToAsync(nameof(PickDocumentTypeListView), new Dictionary<string, object>() { { "Key", key } });
+        await Shell.Current.GoToAsync(nameof(PickDocumentTypeListView), new Dictionary<string, object>() { { "SelectedKey", key } });
     }
 
     [RelayCommand]

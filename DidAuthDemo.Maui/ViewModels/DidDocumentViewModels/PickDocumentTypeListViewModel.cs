@@ -7,11 +7,11 @@ using DidAuthDemo.Maui.Models;
 
 namespace DidAuthDemo.Maui.ViewModels.DidDocumentViewModels;
 
-[QueryProperty(nameof(Key), "Key")]
+[QueryProperty("SelectedKey", "SelectedKey")]
 public partial class PickDocumentTypeListViewModel : ObservableObject
 {
     [ObservableProperty]
-    Key key;
+    Key selectedKey;
 
     [ObservableProperty]
     bool canHaveCardanoStaking;
@@ -29,7 +29,7 @@ public partial class PickDocumentTypeListViewModel : ObservableObject
     [RelayCommand]
     async void CheckExistingDidTypes()
     {
-        var didsFromKeys = (await _didDatabase.GetByKeyIdAsync(Key.Id));
+        var didsFromKeys = (await _didDatabase.GetByKeyIdAsync(SelectedKey.Id));
 
         if (!didsFromKeys.Any(x => x.DidType == (int)DidType.CardanoStaking))
             CanHaveCardanoStaking = true;
@@ -53,10 +53,10 @@ public partial class PickDocumentTypeListViewModel : ObservableObject
         Did did = new Did()
         {
             DidType = (int)didType,
-            KeyId = Key.Id,
+            KeyId = SelectedKey.Id,
             IndexDerivation = indexDerivation,
         };
 
-        await Shell.Current.GoToAsync(nameof(PickResolutionTypeView), new Dictionary<string, object>() { { "Did", did } });
+        await Shell.Current.GoToAsync(nameof(PickResolutionTypeView), new Dictionary<string, object>() { { "NewDid", did } });
     }
 }

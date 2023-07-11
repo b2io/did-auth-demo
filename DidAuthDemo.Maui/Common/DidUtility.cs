@@ -10,18 +10,16 @@ namespace DidAuthDemo.Maui.Common;
 
 public static class DidUtility
 {
-    public static async Task<DidDocument> GetDidDocument(Did did, Key key)
+    public static async Task<DidDocument> GetDidDocument(string didIdentifier, PublicKey publicKey)
     {
-        var publicKey = JsonSerializer.Deserialize<PublicKey>(key.PublicKey);
-
-        var keyId = $"{did.Identifier}#key-1";
+        var keyId = $"{didIdentifier}#key-1";
         var didDocumentPublicKeys = new List<DidPublicKey>()
         {
             new DidPublicKey()
             {
                 Id = keyId,
                 Type = "Ed25519VerificationKey2018",
-                Owner = did.Identifier,
+                Owner = didIdentifier,
                 PublicKeyBase58 = Base58.Bitcoin.Encode(publicKey.Key)
             }
         };
@@ -38,7 +36,7 @@ public static class DidUtility
         return new DidDocument()
         {
             Context = new[] { "https://www.w3.org/ns/did/v1" },
-            Id = did.Identifier,
+            Id = didIdentifier,
             Authentications = didDocumentAuthentications.ToArray(),
             PublicKeys = didDocumentPublicKeys.ToArray(),
         };
