@@ -51,7 +51,6 @@ public partial class DidDocumentDetailViewModel : ObservableObject
     [RelayCommand]
     async void CopyDidDocument()
     {
-        var didDocument = await DidUtility.GetDidDocument(Did, Key);
         //move to did creation and just copy from object
         await Clipboard.Default.SetTextAsync(Did.DidDocument);
     }
