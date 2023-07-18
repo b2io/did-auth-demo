@@ -2,8 +2,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodel="clr-namespace:DidAuthDemo.Maui.ViewModels"
              x:Class="DidAuthDemo.Maui.Views.ScannerView"
              Title="ScannerView">
+
+    <ContentPage.BindingContext>
+        <viewmodel:ScannerViewModel />
+    </ContentPage.BindingContext>
 
     <ScrollView>
         <Grid>
@@ -11,12 +17,13 @@
                 Spacing="25"
                 Padding="30,0" HorizontalOptions="Center" VerticalOptions="Center">
 
+                <!--<Label Text="{Binding BarcodePayload}" FontSize="32" HorizontalTextAlignment="Center" />-->
+
                 <zxing:CameraBarcodeReaderView x:Name="cameraBarcodeReaderView" 
+                                               x:FieldModifier="public"
                                                IsDetecting="True"
                                                IsTorchOn="False"
                                                BarcodesDetected="BarcodesDetected" />
-
-                <Label x:Name="barcodeReader" FontSize="32" HorizontalTextAlignment="Center" />
 
             </VerticalStackLayout>
         </Grid>

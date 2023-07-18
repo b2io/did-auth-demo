@@ -1,4 +1,5 @@
-﻿using DidAuthDemo.Maui.Views.CredentialViews;
+﻿using DidAuthDemo.Maui.Views;
+using DidAuthDemo.Maui.Views.CredentialViews;
 using DidAuthDemo.Maui.Views.DidDocumentViews;
 using DidAuthDemo.Maui.Views.KeyViews;
 
@@ -22,6 +23,8 @@ namespace DidAuthDemo.Maui
             Routing.RegisterRoute(nameof(KeyListView), typeof(KeyListView));
 
             Routing.RegisterRoute(nameof(CredentialListView), typeof(CredentialListView));
+
+            Routing.RegisterRoute(nameof(ScannerView), typeof(ScannerView));
         }
     }
 }
