@@ -1,10 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DidAuthDemo.Maui.Common;
+using DidAuthDemo.Core.Common;
 using DidAuthDemo.Maui.Data;
 using DidAuthDemo.Maui.Models;
-using DidAuthDemo.Maui.Resolvers;
+using DidAuthDemo.Core.Resolvers;
 using System.Text.Json;
+using CardanoSharp.Wallet.Models.Keys;
+using DidAuthDemo.Core.Derivers;
+using System.Text;
+using CardanoSharp.Wallet.Extensions.Models;
 
 namespace DidAuthDemo.Maui.ViewModels.DidDocumentViewModels;
 
@@ -62,7 +66,14 @@ public partial class DidDocumentDetailViewModel : ObservableObject
         VerificationAttempted = false;
 
         var resolver = ResolverFactory.GetResolver(Enum.Parse<ResolutionType>(Did.ResolutionType));
-        VerificationResult = await resolver.VerifyDidDocument(Did, Password);
+
+        var message = Encoding.UTF8.GetBytes("message");
+        KeyPair didKeyPair = DeriverFactory
+            .GetKeyDeriver((DidType)did.DidType)
+            .DeriveKey(key, did.IndexDerivation, password);
+        var signature = didKeyPair.PrivateKey.Sign(message);
+
+        VerificationResult = await resolver.VerifyDidDocument(Did, Key, signature);
         await Task.Delay(1000);
 
         ShowSpinner = false;

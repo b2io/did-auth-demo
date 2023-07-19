@@ -1,9 +1,9 @@
 ﻿using CardanoSharp.Wallet.Models.Keys;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DidAuthDemo.Maui.Common;
+using DidAuthDemo.Core.Common;
 using DidAuthDemo.Maui.Data;
-using DidAuthDemo.Maui.Derivers;
+using DidAuthDemo.Core.Derivers;
 using DidAuthDemo.Maui.Models;
 using DidAuthDemo.Maui.Views.DidDocumentViews;
 using System.Text.Json;
@@ -80,8 +80,8 @@ public partial class PickResolutionTypeViewModel : ObservableObject
 
         NewDid.ResolutionType = SelectedResolutionType switch
         {
-            "Web" => Common.ResolutionType.Web.ToString(),
-            "Github" => Common.ResolutionType.Github.ToString(),
+            "Web" => ResolutionType.Web.ToString(),
+            "Github" => ResolutionType.Github.ToString(),
             _ => throw new NotSupportedException()
         };
 

@@ -57,6 +57,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\DidAuthDemo.Core\DidAuthDemo.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Compile Update="Views\DidDocumentViews\PickDocumentTypeListView.xaml.cs">
 	    <DependentUpon>PickDocumentTypeListView.xaml</DependentUpon>
 	  </Compile>
