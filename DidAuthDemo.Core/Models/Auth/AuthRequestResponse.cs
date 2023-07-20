@@ -53,7 +53,7 @@ namespace DidAuthDemo.Core.Models
         {
             Controller = controller;
 
-            var message = Encoding.ASCII.GetBytes(challenge);
+            var message = Encoding.UTF8.GetBytes(challenge);
             var sig = privateKey.Sign(message);
 
             Proof = new AuthResponseProof()

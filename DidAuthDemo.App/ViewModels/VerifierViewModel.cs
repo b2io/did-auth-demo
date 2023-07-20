@@ -133,7 +133,7 @@ public class VerifierViewModel
         var publicKeyObj = holderAuthDidDocument.PublicKeys.FirstOrDefault(x => x.Id == response.Proof.VerificationMethod);
         var publicKey = new PublicKey(Base58.Bitcoin.Decode(publicKeyObj.PublicKeyBase58), null);
 
-        var message = Encoding.ASCII.GetBytes(request.Challenge);
+        var message = Encoding.UTF8.GetBytes(request.Challenge);
         var isValid = publicKey.Verify(message, Base58.Bitcoin.Decode(response.Proof.ProofValue));
 
         ResponseToVerify = string.Empty;

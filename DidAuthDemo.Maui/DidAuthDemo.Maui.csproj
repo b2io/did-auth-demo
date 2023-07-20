@@ -49,6 +49,7 @@
 	  <PackageReference Include="CardanoSharp.Wallet" Version="5.0.3" />
 	  <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+	  <PackageReference Include="Refit.HttpClientFactory" Version="7.0.0" />
 	  <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
 	  <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.5" />
 	  <PackageReference Include="ZXing.Net.Maui" Version="0.3.0-preview.1" />
@@ -71,6 +72,12 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Views\CredentialViews\CredentialListView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\DidDocumentViews\DidDocumentAuthRequestResultView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\DidDocumentViews\DidDocumentAuthRequestScanView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\DidDocumentViews\DidDocumentCreateView.xaml">

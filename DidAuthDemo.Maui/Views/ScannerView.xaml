@@ -15,9 +15,9 @@
         <Grid>
             <VerticalStackLayout
                 Spacing="25"
-                Padding="30,0" HorizontalOptions="Center" VerticalOptions="Center">
-
-                <!--<Label Text="{Binding BarcodePayload}" FontSize="32" HorizontalTextAlignment="Center" />-->
+                Padding="30,0" 
+                HorizontalOptions="Center" 
+                VerticalOptions="Center">
 
                 <zxing:CameraBarcodeReaderView x:Name="cameraBarcodeReaderView" 
                                                x:FieldModifier="public"

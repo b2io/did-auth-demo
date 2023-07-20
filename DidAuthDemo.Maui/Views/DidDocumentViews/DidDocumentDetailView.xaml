@@ -136,6 +136,11 @@
                 FontSize="Medium"
                 Command="{Binding VerifyDidDocumentCommand}" />
 
+        <Button Text="Authenticate"
+                Margin="20, 10"
+                FontSize="Medium"
+                Command="{Binding AuthenticateCommand}" />
+
 
         <ActivityIndicator IsVisible="{Binding ShowSpinner}"
                            IsRunning="True"/>

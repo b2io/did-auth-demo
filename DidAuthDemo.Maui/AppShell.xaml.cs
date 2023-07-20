@@ -25,6 +25,8 @@ namespace DidAuthDemo.Maui
             Routing.RegisterRoute(nameof(CredentialListView), typeof(CredentialListView));
 
             Routing.RegisterRoute(nameof(ScannerView), typeof(ScannerView));
+            Routing.RegisterRoute(nameof(DidDocumentAuthRequestScanView), typeof(DidDocumentAuthRequestScanView));
+            Routing.RegisterRoute(nameof(DidDocumentAuthRequestResultView), typeof(DidDocumentAuthRequestResultView));
         }
     }
 }

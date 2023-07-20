@@ -17,9 +17,9 @@ public abstract class BaseKeyDeriver : IBaseKeyDeriver
 
     protected KeyPair GetDidKeyPair(Key key, string derivationPath, string password)
     {
-        key.UnlockPrivateKey(password);
+        var strPrivateKey = key.UnlockPrivateKey(password);
 
-        PrivateKey privateKeyRoot = JsonSerializer.Deserialize<PrivateKey>(key.PrivateKey);
+        PrivateKey privateKeyRoot = JsonSerializer.Deserialize<PrivateKey>(strPrivateKey);
 
         PrivateKey privateKeyDid = privateKeyRoot.Derive(derivationPath);
         PublicKey publicKeyDid = privateKeyDid.GetPublicKey(false);

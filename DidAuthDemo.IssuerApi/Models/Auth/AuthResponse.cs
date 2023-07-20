@@ -14,7 +14,7 @@ public class AuthResponse
     {
         Controller = controller;
 
-        var message = Encoding.ASCII.GetBytes(challenge);
+        var message = Encoding.UTF8.GetBytes(challenge);
         var sig = privateKey.Sign(message); // authDidDoc.KeyPair.PrivateKey.Sign(message);
 
         Proof = new AuthResponseProof()

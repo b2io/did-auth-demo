@@ -1,6 +1,8 @@
 import React from 'react';
 import QRCode from "react-qr-code";
 
+let challenge = "";
+
 async function getAuthRequest() {
   const res = await fetch("http://localhost:5196/api/get-auth-request", { cache: 'no-store' });
   
@@ -10,7 +12,23 @@ async function getAuthRequest() {
     throw new Error('Failed to fetch data')
   }
 
-  return JSON.stringify(await res.json());
+  const request = await res.json();
+  challenge = request.challenge;
+
+  return JSON.stringify(request);
+}
+
+async function checkAuthStatus() {
+  const res = await fetch(`http://localhost:5196/api/check-auth-status/${challenge}`, { cache: 'no-store'});
+  if(res.ok) {
+    var resObj = await res.json();
+    if(resObj.isAuthenticated) {
+      console.log(resObj.accessToken);
+      alert("Successfully Authenticated!")
+    }else {
+      alert("Not Authenticated")
+    }
+  }
 }
 
 export default async function Home() {
@@ -27,6 +45,7 @@ export default async function Home() {
           value={authRequest}
           viewBox={`0 0 256 256`}
           />
+          <button className='btn btn-primary' onClick={checkAuthStatus}>Check Auth Status</button>
     </div>
   )
 }

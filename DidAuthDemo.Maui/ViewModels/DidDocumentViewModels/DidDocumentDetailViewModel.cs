@@ -9,6 +9,7 @@ using CardanoSharp.Wallet.Models.Keys;
 using DidAuthDemo.Core.Derivers;
 using System.Text;
 using CardanoSharp.Wallet.Extensions.Models;
+using DidAuthDemo.Maui.Views.DidDocumentViews;
 
 namespace DidAuthDemo.Maui.ViewModels.DidDocumentViewModels;
 
@@ -59,6 +60,14 @@ public partial class DidDocumentDetailViewModel : ObservableObject
         await Clipboard.Default.SetTextAsync(Did.DidDocument);
     }
 
+    [RelayCommand(CanExecute = nameof(CanAuthenticate))]
+    async void Authenticate()
+    {
+        await Shell.Current.GoToAsync($"{nameof(DidDocumentAuthRequestScanView)}?CurrentDid={Did.Identifier}&KeyId={Key.Id}&Password={Password}");
+    }
+
+    bool CanAuthenticate() => !string.IsNullOrEmpty(Password);
+
     [RelayCommand(CanExecute = nameof(CanVerifyDocument))]
     async void VerifyDidDocument()
     {
@@ -70,7 +79,7 @@ public partial class DidDocumentDetailViewModel : ObservableObject
         var message = Encoding.UTF8.GetBytes("message");
         KeyPair didKeyPair = DeriverFactory
             .GetKeyDeriver((DidType)did.DidType)
-            .DeriveKey(key, did.IndexDerivation, password);
+            .DeriveKey(key, did.IndexDerivation, Password);
         var signature = didKeyPair.PrivateKey.Sign(message);
 
         VerificationResult = await resolver.VerifyDidDocument(Did, Key, signature);
@@ -91,5 +100,6 @@ public partial class DidDocumentDetailViewModel : ObservableObject
     partial void OnPasswordChanged(string oldValue, string newValue)
     {
         VerifyDidDocumentCommand?.NotifyCanExecuteChanged();
+        AuthenticateCommand?.NotifyCanExecuteChanged();
     }
 }

@@ -12,9 +12,9 @@ namespace DidAuthDemo.IssuerApi.Controllers;
 [Route("api/capture-auth-response")]
 public class CaptureAuthResponseController : Controller
 {
-    private readonly CaptureAuthResponseService _captureAuthResponseService;
+    private readonly ICaptureAuthResponseService _captureAuthResponseService;
 
-    public CaptureAuthResponseController(CaptureAuthResponseService captureAuthResponseService)
+    public CaptureAuthResponseController(ICaptureAuthResponseService captureAuthResponseService)
     {
         _captureAuthResponseService = captureAuthResponseService;
     }
@@ -48,15 +48,13 @@ public class CaptureAuthResponseService : ICaptureAuthResponseService
 
     public async Task<bool> IsDidResolvableAndValid(AuthResponse authResponse)
     {
-        var key = authResponse.Proof.VerificationMethod.Split("#");
-
         var resolver = ResolverFactory.GetResolver(authResponse.Controller);
         var didDocument = await resolver.GetDidDocument(authResponse.Controller);
 
         var publicKeyObj = didDocument.PublicKeys.FirstOrDefault(x => x.Id == authResponse.Proof.VerificationMethod);
         var publicKey = new PublicKey(Base58.Bitcoin.Decode(publicKeyObj.PublicKeyBase58), null);
 
-        var message = Encoding.ASCII.GetBytes(authResponse.Proof.Challenge);
+        var message = Encoding.UTF8.GetBytes(authResponse.Proof.Challenge);
         return publicKey.Verify(message, Base58.Bitcoin.Decode(authResponse.Proof.ProofValue));
     }
 
