@@ -1,4 +1,4 @@
-﻿using DidAuthDemo.Maui.Common;
+﻿using DidAuthDemo.Core.Common;
 using System.Globalization;
 
 namespace DidAuthDemo.Maui.Converters;

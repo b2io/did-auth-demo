@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DidAuthDemo.Maui.Common;
+using DidAuthDemo.Core.Common;
 using DidAuthDemo.Maui.Data;
 using DidAuthDemo.Maui.Views.DidDocumentViews;
 using DidAuthDemo.Maui.Models;

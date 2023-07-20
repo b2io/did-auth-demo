@@ -38,6 +38,12 @@ public class DidDatabase
         return await Database.Table<Did>().Where(i => i.Id == id).FirstOrDefaultAsync();
     }
 
+    public async Task<Did> GetByDIDAsync(string did)
+    {
+        await Init();
+        return await Database.Table<Did>().Where(i => i.Identifier.Equals(did)).FirstOrDefaultAsync();
+    }
+
     public async Task<int> SaveItemAsync(Did item)
     {
         await Init();
