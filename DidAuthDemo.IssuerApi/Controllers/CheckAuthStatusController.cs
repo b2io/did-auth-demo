@@ -65,6 +65,6 @@ public class CheckAuthStatusService : ICheckAuthStatusService
         _issuerDbContext.Auths.Remove(authRecord);
         await _issuerDbContext.SaveChangesAsync();
 
-        return new AuthenticatedRecord((DateTime.UtcNow - authRecord.CreatedAt).TotalMinutes > 15, authRecord.DidOwner);
+        return new AuthenticatedRecord((DateTime.UtcNow - authRecord.CreatedAt).TotalMinutes < 15, authRecord.DidOwner);
     }
 }

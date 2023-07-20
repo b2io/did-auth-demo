@@ -1,5 +1,6 @@
 using DidAuthDemo.IssuerApi.Controllers;
 using DidAuthDemo.IssuerApi.Data;
+using DidAuthDemo.IssuerApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -33,6 +34,8 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddTransient<ICaptureAuthResponseService, CaptureAuthResponseService>();
+builder.Services.AddTransient<ICheckAuthStatusService, CheckAuthStatusService>();
+builder.Services.AddTransient<ITokenGeneratorService, TokenGeneratorService>();
 
 builder.Services.AddDbContext<IssuerDbContext>(options => 
     options.UseNpgsql(builder.Configuration["ConnectionStrings:Default"]));
