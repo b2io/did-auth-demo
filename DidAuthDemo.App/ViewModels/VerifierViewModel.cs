@@ -124,12 +124,13 @@ public class VerifierViewModel
         var response = Utility.ByteArrayToObject<AuthResponse>(responseDecoded);
 
         var key = response.Proof.VerificationMethod.Split("#");
+        //not true resolver since we are using dummy did method
         var holderAuthDidDocument = _didAuthService.GetHolderByDidId(key[0]);
 
         if (holderAuthDidDocument == null)
             return (null, false);
 
-
+        //using verification method to select correct public key
         var publicKeyObj = holderAuthDidDocument.PublicKeys.FirstOrDefault(x => x.Id == response.Proof.VerificationMethod);
         var publicKey = new PublicKey(Base58.Bitcoin.Decode(publicKeyObj.PublicKeyBase58), null);
 

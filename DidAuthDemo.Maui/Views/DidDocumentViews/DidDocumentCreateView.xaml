@@ -22,10 +22,9 @@
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    
-    <VerticalStackLayout>
-        <Grid Padding="20"
-            HorizontalOptions="Center"
+
+    <VerticalStackLayout Padding="20">
+        <Grid HorizontalOptions="Center"
             RowDefinitions="*, *"
             IsVisible="{Binding HasKeys, Converter={StaticResource InvertedBoolConverter}}">
 
@@ -46,24 +45,21 @@
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DidDocumentCreateViewModel}}, Path=KeySelectedCommand}"
                                         CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
-                            <Label Text="{Binding Name}" 
-                               HorizontalOptions="Center"
-                               FontSize="Large"
-                               Padding="20, 10, 20, 0"/>
+                            <Label Text="{Binding Name}"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   FontSize="Large"/>
                         </Frame>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Grid Padding="20"
-            HorizontalOptions="Center"
-            RowDefinitions="*">
-            <Button Grid.Row="1"
+        <Button Grid.Row="1"            
                 Text="Create a Key"
                 FontSize="Body"
                 Command="{Binding CreateNewKeyCommand}"></Button>
-        </Grid>
+        
     </VerticalStackLayout>
 
 

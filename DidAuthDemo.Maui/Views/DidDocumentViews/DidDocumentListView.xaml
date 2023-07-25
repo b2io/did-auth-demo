@@ -35,8 +35,7 @@
         </Grid>  
 
         <CollectionView IsVisible="{Binding HasDids}"
-                        ItemsSource="{Binding Dids}"
-                        Margin="0, 0, 0, 20">
+                        ItemsSource="{Binding Dids}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:Did">
                     <Grid Padding="10">
