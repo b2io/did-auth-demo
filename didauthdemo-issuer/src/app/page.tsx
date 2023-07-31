@@ -1,8 +1,9 @@
 import React from 'react';
-import QRCode from "react-qr-code";
+import HomePage from '@/components/homepage';
 
-import CheckStatus from './checkStatus';
 
+/////////////////////////
+//i dont like this being in this file
 let challenge = "";
 
 async function getAuthRequest() {
@@ -19,22 +20,13 @@ async function getAuthRequest() {
 
   return JSON.stringify(request);
 }
+/////////////////////////
 
 export default async function Home() {
   const authRequest = await getAuthRequest();
   console.log("payload", authRequest);
 
   return (
-    <div className="w-full p-6 m-auto rounded-md shadow-md lg:max-w-lg">
-        <h1 className="text-3xl font-semibold text-center text-purple-700">DID Auth Demo</h1>
-        <p className="text-center">Please scan the QR Code to with your mobile app to login.</p>
-        <QRCode
-          size={256}
-          style={{ height: "500", maxWidth: "100%", width: "100%" }}
-          value={authRequest}
-          viewBox={`0 0 256 256`}
-          />
-          <CheckStatus challenge={challenge} />
-    </div>
+      <HomePage challenge={challenge} authRequest={authRequest} />
   )
 }
