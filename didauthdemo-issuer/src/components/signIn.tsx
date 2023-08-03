@@ -1,6 +1,7 @@
 'use client'
 
 import QRCode from "react-qr-code"
+import { useRouter } from 'next/navigation'
 
 /////////////////////////
 //i dont like this being in this file
@@ -9,17 +10,16 @@ export type SessionCheckProps = {
     challenge: string,
     setCurrentUser: any
 }
-/////////////////////////
 
-/////////////////////////
-//i dont like this being in this file
 function checkAuthStatus(challenge:string, setCurrentUser: any) {
+    const router = useRouter()
     fetch(`http://localhost:5196/api/check-auth-status/${challenge}`, { cache: 'no-store'})
         .then(res => {
             if(res.ok) {
                 res.json().then(resObj => {
                     if(resObj.isAuthenticated) {
                         setCurrentUser({accessToken: resObj.accessToken})
+                        router.replace('/');
                     }else {
                         alert("Not Authenticated")
                     }
@@ -27,7 +27,6 @@ function checkAuthStatus(challenge:string, setCurrentUser: any) {
             }
         });
 }
-/////////////////////////
 
 export default function SignIn({authRequest, challenge, setCurrentUser}: SessionCheckProps) {
     return (
@@ -40,7 +39,7 @@ export default function SignIn({authRequest, challenge, setCurrentUser}: Session
                 value={authRequest}
                 viewBox={`0 0 256 256`}
                 />
-            <button className='btn btn-primary' onClick={async () => await checkAuthStatus(challenge, setCurrentUser)}>Check Auth Status</button>
+            <button className='btn btn-primary mt-3' onClick={async () => await checkAuthStatus(challenge, setCurrentUser)}>Check Auth Status</button>
         </div>
     )
 }
