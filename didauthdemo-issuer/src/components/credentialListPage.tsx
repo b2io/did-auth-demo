@@ -7,12 +7,16 @@ import { useCurrentOwner } from "@/hooks/useCurrentOwner";
 
 function Credential({credential}: any) {
     return (
-        <div>
-            <h2>{credential.name}</h2>
-            <p>{credential.description}</p>
-            <Link href={`/credential/${credential.id}`}>
-                View
-            </Link>
+        <div className="card w-96 bg-base-100 shadow-xl">
+            <div className="card-body">
+                <h2 className="card-title">{credential.name}</h2>
+                <p>{credential.description}</p>
+                <div className="card-actions justify-end">
+                    <Link href={`/credential/${credential.id}`}>
+                        <button className="btn btn-primary">View</button>
+                    </Link>
+                </div>
+            </div>
         </div>
     )
 }
@@ -45,7 +49,7 @@ export default function CredentialListPage() {
     
     return (
         <div>
-            <h1>Credentials</h1>
+            <h1 className="mb-4 text-3xl font-bold leading-none tracking-tight">Credentials</h1>
             {credentials && credentials.length > 0 ? <div>{credentials}</div> : <p>No Credentials</p>}
         </div>
     )

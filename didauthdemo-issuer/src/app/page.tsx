@@ -5,7 +5,9 @@ import CredentialListPage from '@/components/credentialListPage';
 export default async function Home() {
   return (
     <AuthGuard>
-      <CredentialListPage />
+      <div className='container p-6 mx-auto my-3'>
+        <CredentialListPage />  
+      </div>
     </AuthGuard>
   )
 }
