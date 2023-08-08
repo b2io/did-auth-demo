@@ -3,7 +3,13 @@ export type CredentialDetail = {
     name: string,
     description: string,
     ownerDid: string,
-    schemaDefinition: any,
+    schemaDefinition: CredentialClaimSchema[],
     createdAt: Date,
     updatedAt: Date
+}
+
+export type CredentialClaimSchema = {
+    label: string,
+    type: string,
+    claim: string
 }

@@ -8,6 +8,7 @@ namespace DidAuthDemo.IssuerApi.Data.Entities
         public string OwnerDid { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string Type { get; set; }
         public string SchemaDefinition { get; set; }
     }
 }

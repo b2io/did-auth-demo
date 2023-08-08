@@ -15,7 +15,7 @@ export default function CredentialDetailSummary({id}: CredentialDetailSummaryPro
         name: '',
         description: '',
         ownerDid: '',
-        schemaDefinition: {},
+        schemaDefinition: [],
         createdAt: new Date(),
         updatedAt: new Date()
     };

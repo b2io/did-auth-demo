@@ -3,38 +3,27 @@
 import PageTitle from "@/components/pageTitle";
 import { useCurrentOwner } from "@/hooks/useCurrentOwner";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { CredentialDetail } from "@/models";
+import { CredentialClaimSchema, CredentialDetail } from "@/models";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-type SchemaField = {
-    label: string,
-    type: string
-}
-
-export default function CreateCredentialForm() {
+export default function CreateCredentialForm({ credentialDetail }: { credentialDetail: CredentialDetail }) {
+    const router = useRouter()
     const { currentUser } = useCurrentUser();
     const { token } = useCurrentOwner(currentUser);
     
-    var defaultCredentialDetail : CredentialDetail = { 
-        id: 0,
-        name: '',
-        description: '',
-        ownerDid: '',
-        schemaDefinition: '',
-        createdAt: new Date(),
-        updatedAt: new Date()
-    };
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [newFieldLabel, setNewFieldLabel] = useState('');
     const [newFieldType, setNewFieldType] = useState('');
-    const [fieldList, setFieldList] = useState<SchemaField[]>([]);
+    const [fieldList, setFieldList] = useState<CredentialClaimSchema[]>([]);
 
-    var newSchemaField : SchemaField = {
+    var newSchemaField : CredentialClaimSchema = {
         label: '',
-        type: ''
+        type: '',
+        claim: ''
     };
 
     var fieldTypeOptions = [
@@ -73,6 +62,8 @@ export default function CreateCredentialForm() {
         newSchemaField.label = newFieldLabel;
         newSchemaField.type = newFieldType;
         setFieldList([...fieldList, newSchemaField]);
+        setNewFieldLabel('');
+        setNewFieldType('');
     }
 
     //this function removes a field from the schema list
@@ -109,10 +100,44 @@ export default function CreateCredentialForm() {
         })
     }
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.stopPropagation();
         event.preventDefault();
-        //credential.ownerDid = token!.unique_name;
+
+        if(name === '' || description === '') {
+            toast("Name and Description are Required", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                type: "error",
+                theme: "light",
+              });
+            return;
+        }
+
+        const credential: CredentialDetail = { 
+            id: credentialDetail.id,
+            name: name,
+            description: description,
+            ownerDid: credentialDetail.ownerDid === '' ? token!.unique_name : credentialDetail.ownerDid,
+            schemaDefinition: fieldList,
+            createdAt: credentialDetail.createdAt,
+            updatedAt: credentialDetail.updatedAt
+        };
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(credential)
+        };
+
+        const resp = await fetch('https://localhost:7243/api/create-credentials', requestOptions);
+        const data = await resp.json();
+        router.push(`/credential/${data.id}`);
     }
 
     return (
@@ -134,8 +159,8 @@ export default function CreateCredentialForm() {
                         </label>
                         <div className="grid grid-cols-3 gap-2">
                             <div className="relative overflow-x-auto col-span-2">
-                                <table className="w-full text-sm text-left">
-                                    <thead className="text-xs uppercase">
+                                <table className="table">
+                                    <thead className="text-xs uppercase bg-base-200">
                                         <tr>
                                             <th scope="col" className="px-6 py-3">
                                                 Label
@@ -153,7 +178,7 @@ export default function CreateCredentialForm() {
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="card w-96 bg-base-100 shadow-xl py-3 px-6 w-auto">
+                            <div className="card bg-base-200 py-3 px-6 w-auto">
                                 <p className="text-xl font-bold leading-none tracking-tight">New Field</p>
                                 <label className='label'>
                                     <span className='label-text'>Label</span>

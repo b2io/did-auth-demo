@@ -9,7 +9,7 @@ import PageTitle from "@/components/pageTitle";
 
 function Credential({credential}: any) {
     return (
-        <div className="card w-96 bg-base-100 shadow-xl">
+        <div className="card w-auto bg-base-100 shadow-xl">
             <div className="card-body">
                 <h2 className="card-title">{credential.name}</h2>
                 <p>{credential.description}</p>
@@ -58,11 +58,13 @@ export default function CredentialListPage() {
             <div className="grid grid-cols-2 gap-2 mb-3">
                 <PageTitle title='Credentials' />
                 <div>
-                <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-20 float-right" onClick={createCredential}>Create</button>
+                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-20 float-right" onClick={createCredential}>Create</button>
                 </div>
                 
             </div>
-            {credentials && credentials.length > 0 ? <div>{credentials}</div> : <p>No Credentials</p>}
+            {credentials && credentials.length > 0 
+                ? <div className="grid grid-cols-4 gap-4">{credentials}</div> 
+                : <p>No Credentials</p>}
         </div>
     )
 }
