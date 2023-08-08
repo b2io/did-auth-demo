@@ -2,20 +2,11 @@
 
 import { useCurrentOwner } from "@/hooks/useCurrentOwner";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { CredentialDetail } from "@/models";
 import { useEffect, useState } from "react";
 
 export type CredentialDetailSummaryProps = {
     id: string
-}
-
-type CredentialDetail = {
-    id: number,
-    name: string,
-    description: string,
-    ownderDid: string,
-    schemaDefinition: any,
-    createdAt: Date,
-    updatedAt: Date
 }
 
 export default function CredentialDetailSummary({id}: CredentialDetailSummaryProps) {
@@ -23,8 +14,8 @@ export default function CredentialDetailSummary({id}: CredentialDetailSummaryPro
         id: 0,
         name: '',
         description: '',
-        ownderDid: '',
-        schemaDefinition: {},
+        ownerDid: '',
+        schemaDefinition: [],
         createdAt: new Date(),
         updatedAt: new Date()
     };
@@ -48,7 +39,7 @@ export default function CredentialDetailSummary({id}: CredentialDetailSummaryPro
 
     
     return (
-        <div className="grid grid-cols-2 gap-4 card bg-white shadow-lg p-3">
+        <div className="grid grid-cols-2 gap-4 card bg-white shadow-lg p-3 my-3">
             <div>
                 <h3 className="mb-2 text-md font-bold leading-none tracking-tight">Name</h3>
                 <p className="leading-none tracking-tight">{credential.name}</p>

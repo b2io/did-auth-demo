@@ -9,7 +9,7 @@ namespace DidAuthDemo.IssuerApi.Models.Responses
         public string Name { get; set; } = null!;
         public string Description { get; set; }
         public string OwnerDid { get; set; }
-        public DetailSchema? SchemaDefinition { get; set; }
+        public ClaimSchema[] SchemaDefinition { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
@@ -26,7 +26,7 @@ namespace DidAuthDemo.IssuerApi.Models.Responses
             Name = name;    
             Description = description;
             OwnerDid = ownerId;
-            SchemaDefinition = JsonSerializer.Deserialize<DetailSchema>(schemaDefinition);
+            SchemaDefinition = JsonSerializer.Deserialize<ClaimSchema[]>(schemaDefinition);
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
         }

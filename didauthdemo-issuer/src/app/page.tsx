@@ -1,6 +1,6 @@
 import React from 'react';
 import AuthGuard from '@/components/authGuard';
-import CredentialListPage from '@/components/credentialListPage';
+import CredentialListPage from '@/app/credentialListPage';
 
 export default async function Home() {
   return (

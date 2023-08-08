@@ -1,4 +1,4 @@
-import SignIn from "@/components/signIn";
+import SignIn from "@/app/sign-in/signIn";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useState } from "react";
 
