@@ -4,6 +4,9 @@ import AuthGuard from '@/components/authGuard';
 import CredentialDetailSummary from '@/app/credential/[id]/credentialDetailSummary';
 import React from 'react';
 import PageTitle from '@/components/pageTitle';
+import SectionTitle from '@/components/sectionTitle';
+import CredentialRequestSection from './credentialRequestSection';
+import CredentialDetailWrapper from './credentialDetailWrapper';
 
 type CredentialDetailPageProps = {
     params: {
@@ -12,12 +15,10 @@ type CredentialDetailPageProps = {
 }
 
 export default function CredentialDetailPage({ params }: CredentialDetailPageProps) {
+
     return(
         <AuthGuard>
-            <div className='container p-6 mx-auto my-3'>
-                <PageTitle title='Credential Detail' />
-                <CredentialDetailSummary id={params.id} />
-            </div>
+            <CredentialDetailWrapper id={params.id} />
         </AuthGuard>
     )
 }
