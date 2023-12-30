@@ -14,6 +14,7 @@ export function useCurrentOwner(currentUser: CurrentUser | null) {
     const [token, setToken] = useState(createTokenInitializer);
 
     useEffect(() => {
+        debugger;
         if(currentUser !== null) {
             if(currentUser.accessToken !== null) {
                 const decodedToken : Token = jwtDecode(currentUser.accessToken);

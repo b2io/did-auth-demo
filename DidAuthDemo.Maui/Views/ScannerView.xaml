@@ -15,7 +15,7 @@
         <Grid>
             <VerticalStackLayout
                 Spacing="25"
-                Padding="30,0" 
+                Padding="0" 
                 HorizontalOptions="Center" 
                 VerticalOptions="Center">
 

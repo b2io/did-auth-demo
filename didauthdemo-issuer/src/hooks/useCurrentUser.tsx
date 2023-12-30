@@ -1,4 +1,5 @@
-import jwtDecode from "jwt-decode";
+"use client";
+
 import { useEffect, useState } from "react";
 
 export type CurrentUser = {
@@ -19,6 +20,10 @@ export function useCurrentUser() {
         else setCurrentUser(null);
         setIsLoadingUser(false);
       }, []);
+
+    useEffect(() => {
+        if(currentUser !== null) window.localStorage.setItem('DID_AUTH_TOKEN', JSON.stringify(currentUser));
+    }, [currentUser]);
 
     return {currentUser, isLoadingUser, setCurrentUser};
 }
